@@ -1,3 +1,5 @@
 tmp
 
 lib/*.js
+# hack to get coffeescript play nicely with Rubymine for the moment
+coffee.sh
