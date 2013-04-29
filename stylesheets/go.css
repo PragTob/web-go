@@ -1,0 +1,46 @@
+table {
+  border-collapse: collapse;
+}
+
+table.go-board td {
+  height: 25px;
+  width: 25px;
+  padding: 0;
+  margin: 0;
+}
+
+td.go-top-left-corner {
+  background-image: url("../images/go/left-top-corner.png");
+}
+
+td.go-top {
+  background-image: url("../images/go/top.png");
+}
+
+td.go-top-right-corner {
+  background-image: url("../images/go/right-top-corner.png");
+}
+
+td.go-left {
+  background-image: url("../images/go/left.png");
+}
+
+td.go-middle {
+  background-image: url("../images/go/middle.png");
+}
+
+td.go-right {
+  background-image: url("../images/go/right.png");
+}
+
+td.go-bottom-left-corner {
+  background-image: url("../images/go/left-bottom-corner.png");
+}
+
+td.go-bottom {
+  background-image: url("../images/go/bottom.png");
+}
+
+td.go-bottom-right-corner {
+  background-image: url("../images/go/right-bottom-corner.png");
+}
