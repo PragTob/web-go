@@ -44,3 +44,17 @@ td.go-bottom {
 td.go-bottom-right-corner {
   background-image: url("../images/go/right-bottom-corner.png");
 }
+
+.go-board .go-stone {
+  border-radius: 50%;
+  width: 23px;
+  height: 23px;
+}
+
+.go-board .go-stone.white {
+  background-color: white;
+}
+
+.go-board .go-stone.black {
+  background-color: black;
+}
