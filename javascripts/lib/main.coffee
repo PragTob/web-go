@@ -1,6 +1,5 @@
 GO_STONE = "<div class='go-stone'></div>"
-BLACK = 'black'
-WHITE = 'white'
+
 
 scaleBoardTo19 = ->
   stretchRowsTo19 = ->

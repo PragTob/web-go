@@ -1,5 +1,6 @@
 tmp
 
 javascripts/lib/*.js
+spec/*.js
 # hack to get coffeescript play nicely with Rubymine for the moment
 coffee.sh
