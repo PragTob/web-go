@@ -3,10 +3,14 @@ describe 'Board', ->
   board = null
 
   beforeEach ->
-    board = init3x3Board()
+    board = initBoard(3)
+
+
+  describe 'initialization', ->
+    it 'is initialized with an empty moves array', ->
+      expect(board.moves).toEqual []
 
   describe 'get_field', ->
-
     it 'gets the color at the specified position', ->
       board[1][2] = BLACK
       expect(get_field(1, 2, board)).toBe BLACK

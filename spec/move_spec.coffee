@@ -3,17 +3,10 @@ describe 'moves', ->
   board = null
   move = null
 
-  initBoard = ->
-    board = []
-    for i in [0..2]
-      board.push []
-      for j in [0..2]
-        board[i][j] = null
-
   initMove = -> move = create_move 0, 0, BLACK
 
   beforeEach ->
-    initBoard()
+    board = initBoard(3)
     initMove()
 
   describe 'create_move', ->
@@ -28,10 +21,33 @@ describe 'moves', ->
 
 
   describe 'play_move', ->
-    it 'can make a black move', ->
+
+    beforeEach ->
       play_move move, board
-      expect(board[0][0]).toBe(BLACK)
+
+    it 'can make a black move', ->
+      expect(get_field(0, 0, board)).toBe(BLACK)
+
+    it 'saves the moves in the moves list', ->
+      expect(board.moves[0]).toEqual move
+
+    it 'also saves the next move in the list', ->
+      next_move = create_move 1, 1, WHITE
+      play_move(next_move, board)
+      expect(board.moves[1]).toEqual next_move
 
   describe 'is_valid_move', ->
     it 'is a valid move', ->
-      expect(is_valid_move(move, board)).toBe true
+      expect(is_valid_move(move, board)).toBeTruthy
+
+    it 'can not play moves if the field is already occupied', ->
+      play_move move, board
+      move = create_move 0, 0, WHITE
+      expect(is_valid_move(move, board)).toBeFalsy()
+
+    it 'can not play moves by the same color in succession', ->
+      first_move = create_move 0, 0, BLACK
+      second_move = create_move 1, 1, BLACK
+      play_move first_move, board
+      console.log board
+      expect(is_valid_move(second_move, board)).toBeFalsy()
