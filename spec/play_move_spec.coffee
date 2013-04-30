@@ -7,7 +7,7 @@ describe 'play move', ->
     board = []
     for i in [0..2]
       board.push []
-      for j in [0..2]
+      for j in [0..2] 
         board[i][j] = null
 
   initMove = -> move = create_move 0, 0, BLACK
