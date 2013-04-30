@@ -8,19 +8,40 @@ create_move = (x, y, color)->
   y: y
   color: color
 
+create_pass_move = (color)-> create_move(null, null, color)
+
 play_move = (move, board) ->
-  board[move.y][move.x] = move.color
+  unless is_pass_move(move)
+    if is_valid_move(move, board)
+      board[move.y][move.x] = move.color
+    else
+      throw "Not a valid move! This should never happen!!!"
   board.moves.push move
+
+is_pass_move = (move)-> (move.x == null) or (move.y == null)
 
 is_valid_move = (move, board) ->
 
   field_is_occupied = (field)-> field != EMPTY
+
   is_double_move = (move, board)->
     if board.moves.length >= 1
       last_move = board.moves[board.moves.length - 1]
       last_move.color == move.color
     else
       false
+
+
+  is_suicide_move = (move, board)->
+
+    other_color = (color)->
+      if color == BLACK
+        WHITE
+      else
+        BLACK
+
+    opponent_color = other_color(move.color)
+#  captures_stones = (move, board)
 
 
   field = get_field move.x, move.y, board
