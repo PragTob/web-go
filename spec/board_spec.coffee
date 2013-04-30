@@ -12,15 +12,15 @@ describe 'Board', ->
 
   describe 'get_field', ->
     it 'gets the color at the specified position', ->
-      board[1][2] = BLACK
+      play_move(create_move(1, 2, BLACK), board)
       expect(get_field(1, 2, board)).toBe BLACK
 
     it 'gets the color at the top left', ->
-      board[0][0] = WHITE
+      play_move(create_move(0, 0, WHITE), board)
       expect(get_field(0,0,board)).toBe WHITE
 
     it 'gets the color at the bottom right', ->
-      board[2][2] = WHITE
+      play_move(create_move(2, 2, WHITE), board)
       expect(get_field(2,2,board)).toBe WHITE
 
     it 'gets the empty value', ->
@@ -37,3 +37,10 @@ describe 'Board', ->
 
     it 'returns the neutral color for y-values greater than the board length', ->
       expect(get_field(1, 3, board)).toBe NEUTRAL
+
+  describe 'print_board', ->
+
+    it 'prints a beautiful board', ->
+      play_move(create_move(1, 0, BLACK), board)
+      play_move(create_move(0, 2, WHITE), board)
+      expect(print_board(board)).toEqual " X \n   \nO  \n"

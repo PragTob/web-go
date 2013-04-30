@@ -18,4 +18,22 @@ get_field = (x, y, board) ->
   if is_out_of_bounds(x, y, board)
     NEUTRAL
   else
-    board[x][y]
+    board[y][x]
+
+print_board = (board)->
+
+  sign_for_color = (color)->
+    mapping = {}
+    mapping[BLACK] = "X"
+    mapping[WHITE] = "O"
+    mapping[EMPTY] = " "
+
+    mapping[color]
+
+  result = ""
+  for y in [0...board.length]
+    for x in [0...board.length]
+      result += sign_for_color(get_field(x, y, board))
+    result += "\n"
+
+  result

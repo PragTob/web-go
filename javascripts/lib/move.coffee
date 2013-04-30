@@ -9,7 +9,7 @@ create_move = (x, y, color)->
   color: color
 
 play_move = (move, board) ->
-  board[move.x][move.y] = move.color
+  board[move.y][move.x] = move.color
   board.moves.push move
 
 is_valid_move = (move, board) ->

@@ -3,6 +3,18 @@ describe 'moves', ->
   board = null
   move = null
 
+  create_ko_board = ->
+    ko_board = initBoard(7)
+    play_move(create_move(2, 2, BLACK), ko_board)
+    play_move(create_move(3, 2, WHITE), ko_board)
+    play_move(create_move(1, 3, BLACK), ko_board)
+    play_move(create_move(4, 3, WHITE), ko_board)
+    play_move(create_move(2, 4, BLACK), ko_board)
+    play_move(create_move(3, 4, WHITE), ko_board)
+    play_move(create_move(3, 3, BLACK), ko_board)
+    play_move(create_move(2, 3, WHITE), ko_board)
+    console.log print_board(ko_board)
+
   initMove = -> move = create_move 0, 0, BLACK
 
   beforeEach ->
@@ -51,3 +63,10 @@ describe 'moves', ->
       play_move first_move, board
       console.log board
       expect(is_valid_move(second_move, board)).toBeFalsy()
+
+    describe 'KO', ->
+
+      beforeEach ->
+        ko_board = create_ko_board()
+
+      it 'bla',->
