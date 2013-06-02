@@ -51,27 +51,45 @@ is_valid_move = (move, board) ->
         color:  true
       set_move(visited_move, visited_mapping)
 
-    opponent_color = other_color(move.color)
-    visited_map = initBoard(board.length) # needed to prevent infinite recursion
+#    is_no_liberty = ->
+#      # needed to prevent infinite recursion
+#      return true if is_visited(x, y, visited_map)
+#      visit(x, y, visited_map)
+#      stone = get_stone(x, y, board)
+#      switch stone
+#        when EMPTY then false
+#        when NEUTRAL then true
+#        when opponent_color then true
+#        when move.color then all_neighbours_satisfy x, y, board, is_no_liberty()
+#        else throw 'we should never end up here'
 
-    all_neighbours_satisfy (x, y, board)->
-      return false if is_visited(x, y, visited_map)
+
+    opponent_color = other_color(move.color)
+    visited_map = initBoard(board.length)
+
+    all_neighbours_satisfy x, y, board, ->
+      return true if is_visited(x, y, visited_map)
       visit(x, y, visited_map)
       stone = get_stone(x, y, board)
       switch stone
-        when EMPTY then true
-        when NEUTRAL then false
-        when opponent_color then false
-        when move.color then all_neighbours_satisfy(stone_has_no_liberties)
+        when EMPTY then false
+        when NEUTRAL then true
+        when opponent_color then true
+        when move.color then all_neighbours_satisfy x, y, board, this
         else throw 'we should never end up here'
 
 
 
 
-  is_suicide_move = (move, board)->
+
+  is_suicide_move = (move, board)-> !has_liberties(move, board)
 
 #  captures_stones = (move, board)
 
-  field = get_stone move.x, move.y, board
-  return false if field_is_occupied(field) or is_double_move(move, board)
-  true
+  stone = get_stone move.x, move.y, board
+  if (field_is_occupied(stone) or
+     is_double_move(move, board) or
+     is_suicide_move(move, board))
+    false
+  else
+    true
