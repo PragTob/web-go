@@ -54,7 +54,6 @@ describe 'moves', ->
       first_move = create_move 0, 0, BLACK
       second_move = create_move 1, 1, BLACK
       play_move first_move, board
-      console.log board
       expect(is_valid_move(second_move, board)).toBeFalsy()
 
   describe 'capturing stones', ->
@@ -72,7 +71,6 @@ describe 'moves', ->
       play_move(create_pass_move(WHITE), example_board)
       play_move(create_move(2, 4, BLACK), example_board)
       play_move(create_move(2, 3, WHITE), example_board)
-      console.log  print_board(example_board)
       example_board
 
     describe 'simple capture', ->
@@ -136,7 +134,6 @@ describe 'moves', ->
       play_move(create_move(3, 4, WHITE), example_board)
       play_move(create_move(3, 3, BLACK), example_board)
       play_move(create_move(2, 3, WHITE), example_board)
-      console.log print_board(example_board)
       example_board
 
     beforeEach ->

@@ -10,29 +10,30 @@ initBoard = (size)->
   board.prisoners[WHITE] = 0
   board
 
-get_stone = (x, y, board) ->
-  is_out_of_bounds = (x, y, board) ->
-    board_size = board.length # assumes an always quadratic board
-    if (x < 0) or (y < 0) or (x >= board_size) or (y >= board_size)
-      true
-    else
-      false
+is_out_of_bounds = (x, y, board) ->
+  board_size = board.length # assumes an always quadratic board
+  if (x < 0) or (y < 0) or (x >= board_size) or (y >= board_size)
+    true
+  else
+    false
 
+get_stone = (x, y, board) ->
   if is_out_of_bounds(x, y, board)
     NEUTRAL
   else
     board[y][x]
 
-#get_stone_above = (x, y, board)-> get_stone(x, y - 1, board)
-#get_stone_below = (x, y, board)-> get_stone(x, y + 1, board)
-#get_stone_left = (x, y, board)-> get_stone(x - 1, y, board)
-#get_stone_right = (x, y, board)-> get_stone(x + 1, y, board)
+create_coordinate = (x, y)->
+  x: x
+  y: y
 
-all_neighbours_satisfy = (x, y, board, criteria_func)->
-  criteria_func(x, y - 1, board) and
-  criteria_func(x, y + 1, board) and
-  criteria_func(x - 1, y, board) and
-  criteria_func(x + 1, y, board)
+all_neighbours = (x, y, board)->
+  _.map all_neighbouring_coordinates(x, y), (coordinate)->
+    get_stone(coordinate.x, coordinate.y, board)
+
+all_neighbouring_coordinates = (x, y)->
+  [create_coordinate(x, y - 1), create_coordinate(x, y + 1),
+   create_coordinate(x - 1, y), create_coordinate(x + 1, y)]
 
 
 print_board = (board)->
