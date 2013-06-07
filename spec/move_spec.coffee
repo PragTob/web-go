@@ -46,7 +46,7 @@ describe 'moves', ->
       expect(is_valid_move(move, board)).toBeTruthy
 
     it 'can not play moves if the field is already occupied', ->
-      play_move move, board
+      set_move move, board
       move = create_move 0, 0, WHITE
       expect(is_valid_move(move, board)).toBeFalsy()
 
@@ -65,12 +65,11 @@ describe 'moves', ->
       #       XO
       #        X
       example_board = initBoard(7)
-      play_move(create_move(2, 2, BLACK), example_board)
-      play_move(create_pass_move(WHITE), example_board)
-      play_move(create_move(1, 3, BLACK), example_board)
-      play_move(create_pass_move(WHITE), example_board)
-      play_move(create_move(2, 4, BLACK), example_board)
-      play_move(create_move(2, 3, WHITE), example_board)
+      set_move(create_move(2, 2, BLACK), example_board)
+      set_move(create_move(1, 3, BLACK), example_board)
+      set_move(create_move(2, 4, BLACK), example_board)
+      set_move(create_move(2, 3, WHITE), example_board)
+      console.log print_board(example_board)
       example_board
 
     describe 'simple capture', ->
@@ -96,10 +95,12 @@ describe 'moves', ->
         #       XOO
         #        XX
         example_board = create_simple_capture_board()
-        play_move(create_move(3, 2, BLACK), example_board)
-        play_move(create_move(3, 3, WHITE), capture_board)
-        play_move(create_move(3, 4, BLACK), example_board)
-        play_move(create_pass_move(WHITE), example_board)
+        console.log 'WTF?'
+        console.log print_board(example_board)
+        set_move(create_move(3, 2, BLACK), example_board)
+        set_move(create_move(3, 3, WHITE), example_board)
+        set_move(create_move(3, 4, BLACK), example_board)
+        console.log print_board(example_board)
         example_board
 
       capture_2_stones = ->
@@ -111,14 +112,14 @@ describe 'moves', ->
         capture_board = capture_2_stones()
 
       it 'cleans up the two captured stones', ->
-      expect(get_stone(2, 3, capture_board)).toEqual EMPTY
-      expect(get_stone(3, 3, capture_board)).toEqual EMPTY
+        expect(get_stone(2, 3, capture_board)).toEqual EMPTY
+        expect(get_stone(3, 3, capture_board)).toEqual EMPTY
 
 
       it 'increases the prisoner count of the capturerer by 2', ->
         expect(capture_board.prisoners[BLACK]).toEqual(2)
 
-  describe 'KO', ->
+  xdescribe 'KO', ->
     ko_board = null
 
     create_ko_board = ->
@@ -126,14 +127,14 @@ describe 'moves', ->
       # XO O
       #  XO
       example_board = initBoard(7)
-      play_move(create_move(2, 2, BLACK), example_board)
-      play_move(create_move(3, 2, WHITE), example_board)
-      play_move(create_move(1, 3, BLACK), example_board)
-      play_move(create_move(4, 3, WHITE), example_board)
-      play_move(create_move(2, 4, BLACK), example_board)
-      play_move(create_move(3, 4, WHITE), example_board)
-      play_move(create_move(3, 3, BLACK), example_board)
-      play_move(create_move(2, 3, WHITE), example_board)
+      set_move(create_move(2, 2, BLACK), example_board)
+      set_move(create_move(3, 2, WHITE), example_board)
+      set_move(create_move(1, 3, BLACK), example_board)
+      set_move(create_move(4, 3, WHITE), example_board)
+      set_move(create_move(2, 4, BLACK), example_board)
+      set_move(create_move(3, 4, WHITE), example_board)
+      set_move(create_move(3, 3, BLACK), example_board)
+      set_move(create_move(2, 3, WHITE), example_board)
       example_board
 
     beforeEach ->

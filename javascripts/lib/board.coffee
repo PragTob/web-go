@@ -28,10 +28,10 @@ create_coordinate = (x, y)->
   y: y
 
 all_neighbours = (x, y, board)->
-  _.map all_neighbouring_coordinates(x, y), (coordinate)->
+  _.map neighbouring_coordinates(x, y), (coordinate)->
     get_stone(coordinate.x, coordinate.y, board)
 
-all_neighbouring_coordinates = (x, y)->
+neighbouring_coordinates = (x, y)->
   [create_coordinate(x, y - 1), create_coordinate(x, y + 1),
    create_coordinate(x - 1, y), create_coordinate(x + 1, y)]
 

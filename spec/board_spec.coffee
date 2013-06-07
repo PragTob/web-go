@@ -99,10 +99,9 @@ describe 'Board', ->
         expect(color_mapping['black']).toBe(3)
         expect(color_mapping['white']).toBe(1)
 
-      it 'works to check if all surrounding stones are black when they are not', ->
+      it 'works to check if all surrounding stones are black when its wrong', ->
         all_black = _.every(neighbours, is_colored(BLACK))
         expect(all_black).toBeFalsy()
-
 
   describe 'print_board', ->
 
