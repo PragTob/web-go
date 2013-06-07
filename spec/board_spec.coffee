@@ -1,5 +1,4 @@
 describe 'Board', ->
-
   board = null
 
   beforeEach ->
@@ -15,6 +14,13 @@ describe 'Board', ->
 
     it 'is initialized with 0 white prisoners', ->
       expect(board.prisoners[WHITE]).toEqual(0)
+
+  describe 'is_empty', ->
+    it 'returns true for an empty Array', ->
+      expect(is_empty([])).toBeTruthy()
+
+    it 'returns false for a non empty Arra', ->
+      expect(is_empty([1])).toBeFalsy()
 
   describe 'get_color', ->
     it 'gets the color at the specified position', ->
@@ -32,20 +38,20 @@ describe 'Board', ->
     it 'gets the empty value', ->
       expect(get_color(1, 1, board)).toBe EMPTY
 
-    it 'returns the neutral color for x-values smaller than 0', ->
+    it 'returns neutral for x-values smaller than 0', ->
       expect(get_color(-1, 2, board)).toBe NEUTRAL
 
-    it 'returns the neutral color for y-values smaller than 0', ->
+    it 'returns neutral for y-values smaller than 0', ->
       expect(get_color(1, -1, board)).toBe NEUTRAL
 
-    it 'returns the neutral color for x-values greater than the board length', ->
+    it 'returns neutral for x-values greater than the board length', ->
       expect(get_color(3, 2, board)).toBe NEUTRAL
 
-    it 'returns the neutral color for y-values greater than the board length', ->
+    it 'returns neutral for y-values greater than the board length', ->
       expect(get_color(1, 3, board)).toBe NEUTRAL
 
 
-  describe 'neighbouring_stones', ->
+  describe 'neighbours', ->
     neighbour_board = null
     neighbours = null
 
@@ -71,38 +77,54 @@ describe 'Board', ->
     beforeEach ->
       neighbour_board = create_neighbour_board()
 
-    describe 'with a black move played', ->
+    describe 'neighbouring_stones', ->
+      describe 'with a black move played', ->
+        beforeEach ->
+          set_move(create_stone(3, 3, BLACK), neighbour_board)
+          neighbours = neighbouring_stones(2, 3, neighbour_board)
 
-      beforeEach ->
-        set_move(create_stone(3, 3, BLACK), neighbour_board)
-        neighbours = neighbouring_stones(2, 3, neighbour_board)
-
-      it 'counts 4 black stones', ->
-        color_mapping = _.countBy(neighbours, return_color)
-        expect(color_mapping['black']).toBe(4)
+        it 'counts 4 black stones', ->
+          color_mapping = _.countBy(neighbours, return_color)
+          expect(color_mapping['black']).toBe(4)
 
 
-      it 'works to check if all surrounding stones are black when they are', ->
-        all_black = _.every(neighbours, is_colored(BLACK))
-        expect(all_black).toBeTruthy()
+        it 'works to check if all surrounding stones are black when they are', ->
+          all_black = _.every(neighbours, is_colored(BLACK))
+          expect(all_black).toBeTruthy()
 
-    describe 'with a white move played', ->
+      describe 'with a white move played', ->
+        beforeEach ->
+          set_move(create_stone(3, 3, WHITE), neighbour_board)
+          neighbours = neighbouring_stones(2, 3, neighbour_board)
 
-      beforeEach ->
-        set_move(create_stone(3, 3, WHITE), neighbour_board)
-        neighbours = neighbouring_stones(2, 3, neighbour_board)
+        it 'counts 3 black stones and one white', ->
+          color_mapping = _.countBy(neighbours, return_color)
+          expect(color_mapping['black']).toBe(3)
+          expect(color_mapping['white']).toBe(1)
 
-      it 'counts 3 black stones and one white', ->
-        color_mapping = _.countBy(neighbours, return_color)
-        expect(color_mapping['black']).toBe(3)
-        expect(color_mapping['white']).toBe(1)
+        it 'works to check if all surrounding stones are black when its wrong', ->
+          all_black = _.every(neighbours, is_colored(BLACK))
+          expect(all_black).toBeFalsy()
 
-      it 'works to check if all surrounding stones are black when its wrong', ->
-        all_black = _.every(neighbours, is_colored(BLACK))
-        expect(all_black).toBeFalsy()
+    describe 'enemy_neighbours', ->
+      it 'retutns an empty array if there are no neighbours', ->
+        stone = get_stone(2, 2, neighbour_board)
+        neighbours = enemy_neighbours(stone, neighbour_board)
+        expect(is_empty(neighbours)).toBeTruthy()
+
+      it 'returns an empty array if all the neighbours are friends', ->
+        stone = create_stone(2, 3, BLACK)
+        set_move(stone, neighbour_board)
+        neighbours = enemy_neighbours(stone, neighbour_board)
+        expect(is_empty(neighbours)).toBeTruthy()
+
+      it 'returns an array with as many elements as enemies', ->
+        stone = create_stone(2, 3, WHITE)
+        set_move(stone, neighbour_board)
+        neighbours = enemy_neighbours(stone, neighbour_board)
+        expect(neighbours.length).toBe 3
 
   describe 'print_board', ->
-
     it 'prints a beautiful board', ->
       set_move(create_stone(1, 0, BLACK), board)
       set_move(create_stone(0, 2, WHITE), board)

@@ -11,12 +11,6 @@ create_stone = (x, y, color)->
 
 create_pass_move = (color)-> create_stone(null, null, color)
 
-set_move = (move, board)->
-  set_stone(move, board) unless is_out_of_bounds move.x, move.y, board
-
-set_stone = (stone, board)-> board[stone.y][stone.x] = stone.color
-
-
 play_stone = (stone, board) ->
   unless is_pass_move(stone)
     if is_valid_move(stone, board)
@@ -33,12 +27,6 @@ other_color = (color)->
     WHITE
   else
     BLACK
-
-enemy_neighbours = (my_stone, board)->
-  neighbours = neighbouring_stones(my_stone.x, my_stone.y, board)
-  enemy_color = other_color(my_stone.color)
-  _.select neighbours, (neighbouring_stone)->
-    neighbouring_stone.color == enemy_color
 
 has_liberties = (stone, board)->
 
