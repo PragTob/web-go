@@ -16,36 +16,36 @@ describe 'Board', ->
     it 'is initialized with 0 white prisoners', ->
       expect(board.prisoners[WHITE]).toEqual(0)
 
-  describe 'get_stone', ->
+  describe 'get_color', ->
     it 'gets the color at the specified position', ->
-      set_move(create_move(1, 2, BLACK), board)
-      expect(get_stone(1, 2, board)).toBe BLACK
+      set_move(create_stone(1, 2, BLACK), board)
+      expect(get_color(1, 2, board)).toBe BLACK
 
     it 'gets the color at the top left', ->
-      set_move(create_move(0, 0, WHITE), board)
-      expect(get_stone(0,0,board)).toBe WHITE
+      set_move(create_stone(0, 0, WHITE), board)
+      expect(get_color(0,0,board)).toBe WHITE
 
     it 'gets the color at the bottom right', ->
-      set_move(create_move(2, 2, WHITE), board)
-      expect(get_stone(2,2,board)).toBe WHITE
+      set_move(create_stone(2, 2, WHITE), board)
+      expect(get_color(2,2,board)).toBe WHITE
 
     it 'gets the empty value', ->
-      expect(get_stone(1, 1, board)).toBe EMPTY
+      expect(get_color(1, 1, board)).toBe EMPTY
 
     it 'returns the neutral color for x-values smaller than 0', ->
-      expect(get_stone(-1, 2, board)).toBe NEUTRAL
+      expect(get_color(-1, 2, board)).toBe NEUTRAL
 
     it 'returns the neutral color for y-values smaller than 0', ->
-      expect(get_stone(1, -1, board)).toBe NEUTRAL
+      expect(get_color(1, -1, board)).toBe NEUTRAL
 
     it 'returns the neutral color for x-values greater than the board length', ->
-      expect(get_stone(3, 2, board)).toBe NEUTRAL
+      expect(get_color(3, 2, board)).toBe NEUTRAL
 
     it 'returns the neutral color for y-values greater than the board length', ->
-      expect(get_stone(1, 3, board)).toBe NEUTRAL
+      expect(get_color(1, 3, board)).toBe NEUTRAL
 
 
-  describe 'all_neighbours', ->
+  describe 'neighbouring_stones', ->
     neighbour_board = null
     neighbours = null
 
@@ -54,21 +54,19 @@ describe 'Board', ->
       #       X
       #        X
       example_board = initBoard(7)
-      set_move(create_move(2, 2, BLACK), example_board)
-      set_move(create_move(1, 3, BLACK), example_board)
-      set_move(create_move(2, 4, BLACK), example_board)
+      set_move(create_stone(2, 2, BLACK), example_board)
+      set_move(create_stone(1, 3, BLACK), example_board)
+      set_move(create_stone(2, 4, BLACK), example_board)
       example_board
 
     is_colored = (color)->
-      (stone)-> color == stone
+      (stone)-> color == stone.color
 
     return_color = (stone)->
-      if stone == BLACK
-        'black'
-      else if stone == WHITE
-        'white'
-      else
-        'neutral'
+      switch stone.color
+        when BLACK then 'black'
+        when WHITE then 'white'
+        else 'neutral'
 
     beforeEach ->
       neighbour_board = create_neighbour_board()
@@ -76,8 +74,8 @@ describe 'Board', ->
     describe 'with a black move played', ->
 
       beforeEach ->
-        set_move(create_move(3, 3, BLACK), neighbour_board)
-        neighbours = all_neighbours(2, 3, neighbour_board)
+        set_move(create_stone(3, 3, BLACK), neighbour_board)
+        neighbours = neighbouring_stones(2, 3, neighbour_board)
 
       it 'counts 4 black stones', ->
         color_mapping = _.countBy(neighbours, return_color)
@@ -91,8 +89,8 @@ describe 'Board', ->
     describe 'with a white move played', ->
 
       beforeEach ->
-        set_move(create_move(3, 3, WHITE), neighbour_board)
-        neighbours = all_neighbours(2, 3, neighbour_board)
+        set_move(create_stone(3, 3, WHITE), neighbour_board)
+        neighbours = neighbouring_stones(2, 3, neighbour_board)
 
       it 'counts 3 black stones and one white', ->
         color_mapping = _.countBy(neighbours, return_color)
@@ -106,6 +104,6 @@ describe 'Board', ->
   describe 'print_board', ->
 
     it 'prints a beautiful board', ->
-      set_move(create_move(1, 0, BLACK), board)
-      set_move(create_move(0, 2, WHITE), board)
+      set_move(create_stone(1, 0, BLACK), board)
+      set_move(create_stone(0, 2, WHITE), board)
       expect(print_board(board)).toEqual " X \n   \nO  \n"

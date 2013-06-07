@@ -17,23 +17,21 @@ is_out_of_bounds = (x, y, board) ->
   else
     false
 
-get_stone = (x, y, board) ->
+get_color = (x, y, board)->
   if is_out_of_bounds(x, y, board)
     NEUTRAL
   else
     board[y][x]
 
-create_coordinate = (x, y)->
+get_stone = (x, y, board)->
   x: x
   y: y
+  color: get_color(x, y, board)
 
-all_neighbours = (x, y, board)->
-  _.map neighbouring_coordinates(x, y), (coordinate)->
-    get_stone(coordinate.x, coordinate.y, board)
 
-neighbouring_coordinates = (x, y)->
-  [create_coordinate(x, y - 1), create_coordinate(x, y + 1),
-   create_coordinate(x - 1, y), create_coordinate(x + 1, y)]
+neighbouring_stones = (x, y, board)->
+  [get_stone(x, y - 1, board), get_stone(x, y + 1, board),
+   get_stone(x - 1, y, board), get_stone(x + 1, y, board)]
 
 
 print_board = (board)->
@@ -48,7 +46,7 @@ print_board = (board)->
   result = ""
   for y in [0...board.length]
     for x in [0...board.length]
-      result += sign_for_color(get_stone(x, y, board))
+      result += sign_for_color(get_color(x, y, board))
     result += "\n"
 
   result
