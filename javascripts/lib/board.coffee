@@ -46,7 +46,9 @@ enemy_neighbours = (my_stone, board)->
   _.select neighbours, (neighbouring_stone)->
     neighbouring_stone.color == enemy_color
 
-
+is_equal_board = (board_1, board_2)->
+  # stackoverflow: http://stackoverflow.com/questions/11142666/is-there-an-idiomatic-way-to-test-array-equality-in-coffeescript
+  '' + board_1 is '' + board_2
 
 SIGN_MAPPING = {}
 SIGN_MAPPING[BLACK] = "X"
