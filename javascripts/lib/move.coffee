@@ -110,11 +110,8 @@ capture_stones_with = (stone, board)->
 
 
   enemy_color = other_color(stone.color)
-  console.log stone
-  console.log enemy_neighbours(stone, board)
   _.each enemy_neighbours(stone, board), (stone)->
     unless has_liberties(stone, board)
-      console.log 'no liberties!!!'
       take_captures(stone, board, enemy_color)
 
 

@@ -6,35 +6,31 @@ describe 'moves', ->
   initMove = -> move = create_stone 0, 0, BLACK
 
   create_simple_capture_board = ->
-    #        X
-    #       XO
-    #        X
-    example_board = initBoard(7)
-    set_move(create_stone(2, 2, BLACK), example_board)
-    set_move(create_stone(1, 3, BLACK), example_board)
-    set_move(create_stone(2, 4, BLACK), example_board)
-    set_move(create_stone(2, 3, WHITE), example_board)
-    example_board
+    board_string = """
+                   -X-
+                   XO-
+                   -X-
+                   """
+    board_from_string(board_string)
 
   capture_one_stone = ->
     capture_board = create_simple_capture_board()
-    play_stone(create_stone(3, 3, BLACK), capture_board)
+    play_stone(create_stone(2, 1, BLACK), capture_board)
     capture_board
 
 
   create_2_capture_board = ->
-    #        XX
-    #       XOO
-    #        XX
-    example_board = create_simple_capture_board()
-    set_move(create_stone(3, 2, BLACK), example_board)
-    set_move(create_stone(3, 3, WHITE), example_board)
-    set_move(create_stone(3, 4, BLACK), example_board)
-    example_board
+    string = """
+             -XX-
+             XOO-
+             -XX-
+             ----
+             """
+    board_from_string(string)
 
   capture_2_stones = ->
     capture_board = create_2_capture_board()
-    play_stone(create_stone(4, 3, BLACK), capture_board)
+    play_stone(create_stone(3, 1, BLACK), capture_board)
     capture_board
 
   beforeEach ->
@@ -108,12 +104,12 @@ describe 'moves', ->
 
     it 'is true even with just one liberty', ->
       board = create_simple_capture_board()
-      stone = get_stone(2, 3, board)
+      stone = get_stone(1, 1, board)
       expect(has_liberties(stone, board)).toBeTruthy()
 
     it 'is true even if just one stone of the group has the liberty', ->
       board = create_2_capture_board()
-      stone = get_stone(2, 3, board)
+      stone = get_stone(1, 1, board)
       expect(has_liberties(stone, board)).toBeTruthy()
 
     it 'is falsy for a surrounded corner stone', ->
@@ -126,14 +122,14 @@ describe 'moves', ->
 
     it 'is falsy for a classic star catch', ->
       board = create_simple_capture_board()
-      set_move(create_stone(3, 3, BLACK), board)
-      stone = get_stone(2, 3, board)
+      set_move(create_stone(2, 1, BLACK), board)
+      stone = get_stone(1, 1, board)
       expect(has_liberties(stone, board)).toBeFalsy()
 
     it 'is falsy for a turtle capture', ->
       board = create_2_capture_board()
-      stone = get_stone(2, 3, board)
-      set_move(create_stone(4, 3, BLACK), board)
+      stone = get_stone(1, 1, board)
+      set_move(create_stone(3, 1, BLACK), board)
       expect(has_liberties(stone, board)).toBeFalsy()
 
   describe 'capturing stones', ->
@@ -142,7 +138,7 @@ describe 'moves', ->
         capture_board = capture_one_stone()
 
       it 'handles a simple capture and clears out the captured stone', ->
-        expect(get_color(2, 3, capture_board)).toEqual EMPTY
+        expect(get_color(1, 1, capture_board)).toEqual EMPTY
 
       it 'increases the prisoner count of the capturerer', ->
         expect(capture_board.prisoners[BLACK]).toEqual(1)
@@ -152,8 +148,8 @@ describe 'moves', ->
         capture_board = capture_2_stones()
 
       it 'cleans up the two captured stones', ->
-        expect(get_color(2, 3, capture_board)).toEqual EMPTY
-        expect(get_color(3, 3, capture_board)).toEqual EMPTY
+        expect(get_color(1, 1, capture_board)).toEqual EMPTY
+        expect(get_color(2, 1, capture_board)).toEqual EMPTY
 
 
       it 'increases the prisoner count of the capturerer by 2', ->
@@ -167,14 +163,14 @@ describe 'moves', ->
       # XO O
       #  XO
       example_board = initBoard(7)
-      set_move(create_stone(2, 2, BLACK), example_board)
-      set_move(create_stone(3, 2, WHITE), example_board)
-      set_move(create_stone(1, 3, BLACK), example_board)
-      set_move(create_stone(4, 3, WHITE), example_board)
-      set_move(create_stone(2, 4, BLACK), example_board)
-      set_move(create_stone(3, 4, WHITE), example_board)
-      set_move(create_stone(3, 3, BLACK), example_board)
-      set_move(create_stone(2, 3, WHITE), example_board)
+      play_stone(create_stone(2, 2, BLACK), example_board)
+      play_stone(create_stone(3, 2, WHITE), example_board)
+      play_stone(create_stone(1, 3, BLACK), example_board)
+      play_stone(create_stone(4, 3, WHITE), example_board)
+      play_stone(create_stone(2, 4, BLACK), example_board)
+      play_stone(create_stone(3, 4, WHITE), example_board)
+      play_stone(create_stone(3, 3, BLACK), example_board)
+      play_stone(create_stone(2, 3, WHITE), example_board)
       example_board
 
     beforeEach ->

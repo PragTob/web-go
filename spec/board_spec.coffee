@@ -56,14 +56,12 @@ describe 'Board', ->
     neighbours = null
 
     create_neighbour_board = ->
-      #        X
-      #       X
-      #        X
-      example_board = initBoard(7)
-      set_move(create_stone(2, 2, BLACK), example_board)
-      set_move(create_stone(1, 3, BLACK), example_board)
-      set_move(create_stone(2, 4, BLACK), example_board)
-      example_board
+      board_string = """
+                     -X-
+                     X--
+                     -X-
+                     """
+      board_from_string(board_string)
 
     is_colored = (color)->
       (stone)-> color == stone.color
@@ -80,8 +78,8 @@ describe 'Board', ->
     describe 'neighbouring_stones', ->
       describe 'with a black move played', ->
         beforeEach ->
-          set_move(create_stone(3, 3, BLACK), neighbour_board)
-          neighbours = neighbouring_stones(2, 3, neighbour_board)
+          set_move(create_stone(2, 1, BLACK), neighbour_board)
+          neighbours = neighbouring_stones(1, 1, neighbour_board)
 
         it 'counts 4 black stones', ->
           color_mapping = _.countBy(neighbours, return_color)
@@ -94,8 +92,8 @@ describe 'Board', ->
 
       describe 'with a white move played', ->
         beforeEach ->
-          set_move(create_stone(3, 3, WHITE), neighbour_board)
-          neighbours = neighbouring_stones(2, 3, neighbour_board)
+          set_move(create_stone(2, 1, WHITE), neighbour_board)
+          neighbours = neighbouring_stones(1, 1, neighbour_board)
 
         it 'counts 3 black stones and one white', ->
           color_mapping = _.countBy(neighbours, return_color)
@@ -108,24 +106,40 @@ describe 'Board', ->
 
     describe 'enemy_neighbours', ->
       it 'retutns an empty array if there are no neighbours', ->
-        stone = get_stone(2, 2, neighbour_board)
+        stone = get_stone(1, 0, neighbour_board)
         neighbours = enemy_neighbours(stone, neighbour_board)
         expect(is_empty(neighbours)).toBeTruthy()
 
       it 'returns an empty array if all the neighbours are friends', ->
-        stone = create_stone(2, 3, BLACK)
+        stone = create_stone(1, 1, BLACK)
         set_move(stone, neighbour_board)
         neighbours = enemy_neighbours(stone, neighbour_board)
         expect(is_empty(neighbours)).toBeTruthy()
 
       it 'returns an array with as many elements as enemies', ->
-        stone = create_stone(2, 3, WHITE)
+        stone = create_stone(1, 1, WHITE)
         set_move(stone, neighbour_board)
         neighbours = enemy_neighbours(stone, neighbour_board)
         expect(neighbours.length).toBe 3
 
-  describe 'print_board', ->
-    it 'prints a beautiful board', ->
-      set_move(create_stone(1, 0, BLACK), board)
-      set_move(create_stone(0, 2, WHITE), board)
-      expect(print_board(board)).toEqual " X \n   \nO  \n"
+
+  describe 'string conversions', ->
+    board_string = """
+                    -X-
+                    ---
+                    O--
+                    """
+
+    describe 'print_board', ->
+      it 'prints a beautiful board', ->
+        set_move(create_stone(1, 0, BLACK), board)
+        set_move(create_stone(0, 2, WHITE), board)
+        expect(print_board(board)).toEqual board_string
+
+
+    describe 'board_from_string', ->
+      it 'takes a simple string and creates a corresponging board', ->
+        board = board_from_string(board_string)
+        expect(get_color(0, 0, board)).toBe EMPTY
+        expect(get_color(1, 0, board)).toBe BLACK
+        expect(get_color(0, 2, board)).toBe WHITE

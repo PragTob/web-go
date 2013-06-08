@@ -48,14 +48,19 @@ enemy_neighbours = (my_stone, board)->
 
 
 
+SIGN_MAPPING = {}
+SIGN_MAPPING[BLACK] = "X"
+SIGN_MAPPING[WHITE] = "O"
+SIGN_MAPPING[EMPTY] = "-"
+
+BACK_MAPPING = {}
+BACK_MAPPING["X"] = BLACK
+BACK_MAPPING["O"] = WHITE
+BACK_MAPPING["-"] = EMPTY
+
 print_board = (board)->
   sign_for_color = (color)->
-    mapping = {}
-    mapping[BLACK] = "X"
-    mapping[WHITE] = "O"
-    mapping[EMPTY] = " "
-
-    mapping[color]
+    SIGN_MAPPING[color]
 
   result = ""
   for y in [0...board.length]
@@ -63,4 +68,19 @@ print_board = (board)->
       result += sign_for_color(get_color(x, y, board))
     result += "\n"
 
-  result
+  result[0..-2] #remove last \n
+
+board_from_string = (string)->
+
+  color_for_sign = (sign)->
+    BACK_MAPPING[sign]
+
+  lines = string.split "\n"
+  #assumes quadratic boards as it should be
+  board_size = lines.length
+  board = initBoard(board_size)
+  for y in [0...board_size]
+    for x in [0...board_size]
+      set_move(create_stone(x, y, color_for_sign(lines[y][x])), board)
+
+  board
