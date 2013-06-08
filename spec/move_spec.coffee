@@ -89,6 +89,27 @@ describe 'moves', ->
       play_stone first_move, board
       expect(is_valid_move(second_move, board)).toBeFalsy()
 
+    it 'does not allow suicide moves', ->
+      string = """
+               -X-
+               X-X
+               -X-
+               """
+      board = board_from_string(string)
+      move = create_stone(1, 1, WHITE)
+      expect(is_valid_move(move, board)).toBeFalsy()
+
+    it "checks if stones are captured so that it's not a suicide move", ->
+      string = """
+               -XO-
+               X-XO
+               -XO-
+               ----
+               """
+      board = board_from_string(string)
+      move = create_stone(1, 1, WHITE)
+      expect(is_valid_move(move, board)).toBeTruthy
+
   describe 'has_liberties', ->
     it 'is true for a single lonely stone', ->
       board = initBoard(3)

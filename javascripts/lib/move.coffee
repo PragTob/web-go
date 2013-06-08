@@ -79,10 +79,10 @@ is_valid_move = (stone, board) ->
 
   is_capturing_stones = (move, board)->
     # we don't want to modify the original board as this is just a test
-    copy_board = board.clone()
+    copy_board = board.slice(0)
     set_move(move, copy_board)
-    enemy_neighbours = enemy_neighbours(move, copy_board)
-    not _.every enemy_neighbours, (stone)-> has_liberties(stone, copy_board)
+    neighbours = enemy_neighbours(move, copy_board)
+    not _.every neighbours, (stone)-> has_liberties(stone, copy_board)
       
   if (field_is_occupied(stone, board) or
      is_double_move(stone, board) or
