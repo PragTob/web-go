@@ -2,7 +2,7 @@ before_install:
   - 'export DISPLAY=:99.0'
   - 'sh -e /etc/init.d/xvfb start'
 before_script:
-  - 'sh compile-all.sh'
+  - 'ruby compile-all.rb'
 script: 'DISPLAY=:99.0 rake jasmine:ci'
 
 rvm:
