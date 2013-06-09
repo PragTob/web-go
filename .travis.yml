@@ -4,6 +4,8 @@ before_install:
 before_script:
   - 'npm install coffee-script'
   - 'sh compile-all.sh'
+  - 'ls javascripts/lib'
+  -  'cat javascripts/lib/board.js'
 script: 'DISPLAY=:99.0 rake jasmine:ci'
 
 rvm:
