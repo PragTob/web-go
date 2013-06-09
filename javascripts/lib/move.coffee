@@ -17,7 +17,7 @@ play_stone = (stone, board) ->
       set_move(stone, board)
       capture_stones_with(stone, board)
     else
-      throw "Not a valid move! This should never happen!!!"
+      throw "Illegal move Exception!"
   board.moves.push stone
 
 is_pass_move = (stone)-> (stone.x == null) or (stone.y == null)
@@ -83,6 +83,9 @@ is_valid_move = (stone, board) ->
     set_move(move, copy_board)
     neighbours = enemy_neighbours(move, copy_board)
     not _.every neighbours, (stone)-> has_liberties(stone, copy_board)
+
+  is_ko_move = (move, board)->
+
       
   if (field_is_occupied(stone, board) or
      is_double_move(stone, board) or

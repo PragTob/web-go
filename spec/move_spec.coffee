@@ -33,6 +33,15 @@ describe 'moves', ->
     play_stone(create_stone(3, 1, BLACK), capture_board)
     capture_board
 
+  create_ko_board = ->
+    string = """
+             -XO-
+             X-XO
+             -XO-
+             ----
+             """
+    board_from_string(string)
+
   beforeEach ->
     board = initBoard(3)
     initMove()
@@ -100,13 +109,7 @@ describe 'moves', ->
       expect(is_valid_move(move, board)).toBeFalsy()
 
     it "checks if stones are captured so that it's not a suicide move", ->
-      string = """
-               -XO-
-               X-XO
-               -XO-
-               ----
-               """
-      board = board_from_string(string)
+      board = create_ko_board()
       move = create_stone(1, 1, WHITE)
       expect(is_valid_move(move, board)).toBeTruthy
 
@@ -179,23 +182,37 @@ describe 'moves', ->
   xdescribe 'KO', ->
     ko_board = null
 
-    create_ko_board = ->
-      #  XO
-      # XO O
-      #  XO
-      example_board = initBoard(7)
-      play_stone(create_stone(2, 2, BLACK), example_board)
-      play_stone(create_stone(3, 2, WHITE), example_board)
-      play_stone(create_stone(1, 3, BLACK), example_board)
-      play_stone(create_stone(4, 3, WHITE), example_board)
-      play_stone(create_stone(2, 4, BLACK), example_board)
-      play_stone(create_stone(3, 4, WHITE), example_board)
-      play_stone(create_stone(3, 3, BLACK), example_board)
-      play_stone(create_stone(2, 3, WHITE), example_board)
-      example_board
-
     beforeEach ->
       ko_board = create_ko_board()
 
-    it 'has no stone at the KO move',->
-      expect(get_color(3, 3, ko_board)).toEqual(EMPTY)
+    first_ko_capture = (board)->
+      play_stone(create_stone(1, 1, WHITE), board)
+      board
+
+
+    it 'can play the first ko move and capture the stone',->
+      ko_board = first_ko_capture(ko_board)
+      expect(get_color(2, 1, ko_board)).toEqual(EMPTY)
+
+    it 'is not legal to capture the ko back immediately', ->
+      ko_board = first_ko_capture(ko_board)
+      move = create_stone(2, 1, BLACK)
+      expect(is_valid_move(move, ko_board)).toBeFalsy()
+
+    it 'is ok to play somewhere else after the KO', ->
+      ko_board = first_ko_capture(ko_board)
+      move = create_stone(0, 3, BLACK)
+      expect(is_valid_move(move, ko_board)).toBeTruthy()
+
+    it 'is ok to close the KO after a threat or something', ->
+      ko_board = first_ko_capture(ko_board)
+      play_stone(create_stone(0, 3, BLACK), ko_board)
+      move = create_stone(2, 1, WHITE)
+      expect(is_valid_move(move, ko_board)).toBeTruthy()
+
+    it 'is ok to take the stone after a ko threat has been answered', ->
+      ko_board = first_ko_capture(ko_board)
+      play_stone(create_stone(0, 3, BLACK), ko_board)
+      play_stone(create_stone(2, 3, WHITE), ko_board)
+      move = create_stone(2, 1, BLACK)
+      expect(is_valid_move(move, ko_board)).toBeTruthy()
