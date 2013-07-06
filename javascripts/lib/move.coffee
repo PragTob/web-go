@@ -15,7 +15,8 @@ play_stone = (stone, board) ->
   unless is_pass_move(stone)
     if is_valid_move(stone, board)
       set_move(stone, board)
-      capture_stones_with(stone, board)
+      captures = capture_stones_with(stone, board)
+      stone.captures = captures
     else
       throw "Illegal move Exception!"
   board.moves.push stone
@@ -96,12 +97,15 @@ is_valid_move = (stone, board) ->
 
 capture_stones_with = (stone, board)->
 
-  take_captures = (stone, board, captive_color)->
+  take_captures = (stone, board, captive_color, captures = [])->
     if stone.color == captive_color
       remove_stone(stone, board)
       increase_prisoner_count(board, captive_color)
+      captures.push stone
       neighbours = neighbouring_stones(stone.x, stone.y, board)
-      _.each neighbours, (stone)-> take_captures(stone, board, captive_color)
+      _.each neighbours, (stone)->
+        take_captures(stone, board, captive_color, captures)
+      captures
 
   remove_stone = (stone, board) ->
     empty_move = create_stone(stone.x, stone.y, EMPTY)
@@ -113,8 +117,9 @@ capture_stones_with = (stone, board)->
 
 
   enemy_color = other_color(stone.color)
+  captures = []
   _.each enemy_neighbours(stone, board), (stone)->
     unless has_liberties(stone, board)
-      take_captures(stone, board, enemy_color)
-
+      captures = captures.concat take_captures(stone, board, enemy_color)
+  captures
 

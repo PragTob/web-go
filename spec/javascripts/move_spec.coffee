@@ -5,7 +5,7 @@ describe 'moves', ->
 
   initMove = -> move = create_stone 0, 0, BLACK
 
-  create_simple_capture_board = ->
+  create_one_capture_board = ->
     board_string = """
                    -X-
                    XO-
@@ -13,9 +13,11 @@ describe 'moves', ->
                    """
     board_from_string(board_string)
 
-  capture_one_stone = ->
-    capture_board = create_simple_capture_board()
-    play_stone(create_stone(2, 1, BLACK), capture_board)
+  capture_one_stone_move = -> create_stone(2, 1, BLACK)
+
+  captured_one_stone_board = ->
+    capture_board = create_one_capture_board()
+    play_stone(capture_one_stone_move(), capture_board)
     capture_board
 
 
@@ -28,9 +30,11 @@ describe 'moves', ->
              """
     board_from_string(string)
 
-  capture_2_stones = ->
+  capture_2_stones_move = -> create_stone(3, 1, BLACK)
+
+  captured_2_stones_board = ->
     capture_board = create_2_capture_board()
-    play_stone(create_stone(3, 1, BLACK), capture_board)
+    play_stone(capture_2_stones_move(), capture_board)
     capture_board
 
   create_ko_board = ->
@@ -127,7 +131,7 @@ describe 'moves', ->
       expect(has_liberties(stone, board)).toBeTruthy()
 
     it 'is true even with just one liberty', ->
-      board = create_simple_capture_board()
+      board = create_one_capture_board()
       stone = get_stone(1, 1, board)
       expect(has_liberties(stone, board)).toBeTruthy()
 
@@ -145,7 +149,7 @@ describe 'moves', ->
       expect(has_liberties(stone, board)).toBeFalsy()
 
     it 'is falsy for a classic star catch', ->
-      board = create_simple_capture_board()
+      board = create_one_capture_board()
       set_move(create_stone(2, 1, BLACK), board)
       stone = get_stone(1, 1, board)
       expect(has_liberties(stone, board)).toBeFalsy()
@@ -159,7 +163,7 @@ describe 'moves', ->
   describe 'capturing stones', ->
     describe 'simple capture', ->
       beforeEach ->
-        capture_board = capture_one_stone()
+        capture_board = captured_one_stone_board()
 
       it 'handles a simple capture and clears out the captured stone', ->
         expect(get_color(1, 1, capture_board)).toEqual EMPTY
@@ -169,7 +173,7 @@ describe 'moves', ->
 
     describe '2 captures', ->
       beforeEach ->
-        capture_board = capture_2_stones()
+        capture_board = captured_2_stones_board()
 
       it 'cleans up the two captured stones', ->
         expect(get_color(1, 1, capture_board)).toEqual EMPTY
@@ -178,6 +182,42 @@ describe 'moves', ->
 
       it 'increases the prisoner count of the capturerer by 2', ->
         expect(capture_board.prisoners[BLACK]).toEqual(2)
+
+  describe 'capturing_stones_with', ->
+    capture_board = null
+    capture_move = null
+
+    describe 'one capture', ->
+      beforeEach ->
+        capture_board = create_one_capture_board()
+        capture_move = capture_one_stone_move()
+        set_move(capture_move, capture_board)
+
+      it 'returns an array with a single captured stone', ->
+        captures = capture_stones_with(capture_move, capture_board)
+        expect(captures.length).toEqual 1
+
+      it 'captures the right stone', ->
+        stone_to_be_captured = get_stone(1, 1, capture_board)
+        captures = capture_stones_with(capture_move, capture_board)
+        expect(captures).toEqual [stone_to_be_captured]
+
+    describe '2 captures', ->
+      beforeEach ->
+        capture_board = create_2_capture_board()
+        capture_move = capture_2_stones_move()
+        set_move(capture_move, capture_board)
+
+      it 'returns an array with a single captured stone', ->
+        captures = capture_stones_with(capture_move, capture_board)
+        expect(captures.length).toEqual 2
+
+      it 'captures the right stone', ->
+        first_to_be_captured = get_stone(1, 1, capture_board)
+        second_to_be_captured = get_stone(2, 1, capture_board)
+        captures = capture_stones_with(capture_move, capture_board)
+        expect(captures).toContain first_to_be_captured
+        expect(captures).toContain second_to_be_captured
 
   xdescribe 'KO', ->
     ko_board = null
