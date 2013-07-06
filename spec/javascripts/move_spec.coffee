@@ -212,12 +212,44 @@ describe 'moves', ->
         captures = capture_stones_with(capture_move, capture_board)
         expect(captures.length).toEqual 2
 
-      it 'captures the right stone', ->
+      it 'captures the right stones', ->
         first_to_be_captured = get_stone(1, 1, capture_board)
         second_to_be_captured = get_stone(2, 1, capture_board)
         captures = capture_stones_with(capture_move, capture_board)
         expect(captures).toContain first_to_be_captured
         expect(captures).toContain second_to_be_captured
+
+    describe 'capturing 2 groups', ->
+
+      create_capture_2_groups_board = ->
+        board_string = """
+                       -X-X-
+                       XO-OX
+                       -X-X-
+                       -----
+                       -----
+                       """
+        board_from_string(board_string)
+
+      capture_2_groups_move = ->
+        create_stone(2, 1, BLACK)
+
+      beforeEach ->
+        capture_board = create_capture_2_groups_board()
+        capture_move = capture_2_groups_move()
+        set_move(capture_move, capture_board)
+
+      it 'captures 2 stones', ->
+        captures = capture_stones_with(capture_move, capture_board)
+        expect(captures.length).toEqual 2
+
+      it 'captures the right 2 tones', ->
+        first_to_be_captured = get_stone(1, 1, capture_board)
+        second_to_be_captured = get_stone(3, 1, capture_board)
+        captures = capture_stones_with(capture_move, capture_board)
+        expect(captures).toContain first_to_be_captured
+        expect(captures).toContain second_to_be_captured
+
 
   xdescribe 'KO', ->
     ko_board = null
