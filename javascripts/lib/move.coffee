@@ -80,8 +80,7 @@ is_valid_move = (stone, board) ->
 
   is_capturing_stones = (move, board)->
     # we don't want to modify the original board as this is just a test
-    # jeez it seems that it would be better to have a full board here.. a must maybe even TODO
-    copied_board = copied_board(board)
+    copied_board = copy_board(board)
     set_move(move, copied_board)
     neighbours = enemy_neighbours(move, copied_board)
     not _.every neighbours, (stone)-> has_liberties(stone, copied_board)
