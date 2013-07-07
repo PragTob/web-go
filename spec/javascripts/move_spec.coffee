@@ -251,7 +251,7 @@ describe 'moves', ->
         expect(captures).toContain second_to_be_captured
 
 
-  xdescribe 'KO', ->
+  describe 'KO', ->
     ko_board = null
 
     beforeEach ->

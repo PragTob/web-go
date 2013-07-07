@@ -80,20 +80,39 @@ is_valid_move = (stone, board) ->
 
   is_capturing_stones = (move, board)->
     # we don't want to modify the original board as this is just a test
-    copy_board = board.slice(0)
-    set_move(move, copy_board)
-    neighbours = enemy_neighbours(move, copy_board)
-    not _.every neighbours, (stone)-> has_liberties(stone, copy_board)
+    # jeez it seems that it would be better to have a full board here.. a must maybe even TODO
+    copied_board = copied_board(board)
+    set_move(move, copied_board)
+    neighbours = enemy_neighbours(move, copied_board)
+    not _.every neighbours, (stone)-> has_liberties(stone, copied_board)
 
-  is_ko_move = (move, board)->
+  is_forbidden_ko_move = (move, board, captures)->
+    return false if board.moves.length == 0
+    last_move = board.moves[board.moves.length - 1]
+    if captures.length == 1 && last_move.captures.length == 1
+      capture = last_move.captures[0]
+      if capture.x == move.x && capture.y == move.y && capture.color == move.color
+        true
+      else
+        false
+    else
+      false
+
 
       
-  if (field_is_occupied(stone, board) or
-     is_double_move(stone, board) or
-     is_suicide_move(stone, board))
+  if (field_is_occupied(stone, board) or is_double_move(stone, board))
     false
   else
-    true
+    copied_board = copy_board(board)
+    set_move(stone, copied_board)
+    captures = capture_stones_with(stone, copied_board)
+    if !is_empty(captures) or has_liberties(stone, copied_board)
+      if !is_forbidden_ko_move(stone, board, captures)
+        true
+      else
+        false
+    else
+      false
 
 capture_stones_with = (stone, board)->
 

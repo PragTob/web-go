@@ -50,6 +50,37 @@ describe 'Board', ->
     it 'returns neutral for y-values greater than the board length', ->
       expect(get_color(1, 3, board)).toBe NEUTRAL
 
+  describe 'copy_board', ->
+
+    it 'copies the board itself over with values', ->
+      set_move(create_stone(1, 2, BLACK), board)
+      copy = copy_board board
+      expect(get_color(1, 2, copy)).toEqual BLACK
+
+    it 'copies the moves property over', ->
+      move = create_stone(1, 1, BLACK)
+      board.moves.push move
+      copy = copy_board(board)
+      expect(copy.moves).toEqual board.moves
+
+    it 'copies the prisoners property over', ->
+      board.prisoners[BLACK] = 4
+      board.prisoners[WHITE] = 7
+      copy = copy_board(board)
+      expect(copy.prisoners[BLACK]).toEqual board.prisoners[BLACK]
+      expect(copy.prisoners[WHITE]).toEqual board.prisoners[WHITE]
+
+    it 'does not alter the original', ->
+      console.log print_board(board)
+      copy = copy_board(board)
+      set_move(create_stone(1, 1, WHITE), copy)
+      console.log print_board(board)
+      expect(get_color(1, 1, board)).toEqual EMPTY
+
+    it 'should not be the same', ->
+      copy = copy_board(board)
+      expect(copy == board).toBeFalsy
+
 
   describe 'neighbours', ->
     neighbour_board = null

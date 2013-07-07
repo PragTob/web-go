@@ -10,6 +10,26 @@ initBoard = (size)->
   board.prisoners[WHITE] = 0
   board
 
+copy_board = (board)->
+
+  deep_copy_2_dimensional_array = (array)->
+    copy = []
+    for i in [0...array.length]
+      copy.push array[i].slice(0)
+    copy
+
+  copy_prisoners = (prisoners)->
+    copied_prisoners = {}
+    copied_prisoners[BLACK] = prisoners[BLACK]
+    copied_prisoners[WHITE] = prisoners[WHITE]
+    copied_prisoners
+
+  copy = deep_copy_2_dimensional_array(board)
+  copy.moves = board.moves.slice(0)
+  copy.prisoners = copy_prisoners(board.prisoners)
+  copy
+
+
 set_move = (move, board)->
   set_stone(move, board) unless is_out_of_bounds move.x, move.y, board
 
