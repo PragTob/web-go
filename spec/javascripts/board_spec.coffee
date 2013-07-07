@@ -218,3 +218,13 @@ describe 'Board', ->
       it 'is wrong if one of the existing stones is changed', ->
         set_move(create_stone(0, 1, WHITE), board_1)
         expect(is_equal_board(board_1, board_2)).toBeFalsy()
+
+  describe 'get_last_move', ->
+
+    it 'returns the last move', ->
+      move = create_stone(1, 2, BLACK)
+      play_stone(move, board)
+      expect(get_last_move(board)).toEqual move
+
+    it 'returns null if there is no last move', ->
+      expect(get_last_move(board)).toBeNull()

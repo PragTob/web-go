@@ -72,8 +72,7 @@ is_valid_move = (stone, board) ->
     if board.moves.length == 0
       true
     else
-      last_move = board.moves[board.moves.length - 1]
-      last_move.color != move.color
+      get_last_move(board).color != move.color
 
   is_no_suicide_move = (move, board)->
     has_liberties(move, board) or is_capturing_stones(move, board)
@@ -99,7 +98,7 @@ is_valid_move = (stone, board) ->
 
 
     return true if is_first_move(board)
-    last_move = board.moves[board.moves.length - 1]
+    last_move = get_last_move(board)
     captures = captures_of_move(stone, board)
     not (last_move_and_current_move_captured_exactly_one(captures, last_move) and
     is_same_move(last_move.captures[0], move))

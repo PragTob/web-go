@@ -70,6 +70,12 @@ is_equal_board = (board_1, board_2)->
   # stackoverflow: http://stackoverflow.com/questions/11142666/is-there-an-idiomatic-way-to-test-array-equality-in-coffeescript
   '' + board_1 is '' + board_2
 
+get_last_move = (board)->
+  if board.moves.length >= 1
+    board.moves[board.moves.length - 1]
+  else
+    null
+
 SIGN_MAPPING = {}
 SIGN_MAPPING[BLACK] = "X"
 SIGN_MAPPING[WHITE] = "O"
