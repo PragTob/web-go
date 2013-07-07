@@ -15,7 +15,8 @@ play_stone = (stone, board) ->
   unless is_pass_move(stone)
     if is_valid_move(stone, board)
       set_move(stone, board)
-      capture_stones_with(stone, board)
+      captures = capture_stones_with(stone, board)
+      stone.captures = captures
     else
       throw "Illegal move Exception!"
   board.moves.push stone
@@ -48,7 +49,7 @@ has_liberties = (stone, board)->
                                 board,
                                 visited_map,
                                 color
-        else throw 'we should never end up here'
+        else throw 'we should never end up here when checking for liberties'
 
   search_for_liberties = (x, y, board, visited_map, color) ->
     neighbours = neighbouring_stones(x, y, board)
@@ -79,29 +80,57 @@ is_valid_move = (stone, board) ->
 
   is_capturing_stones = (move, board)->
     # we don't want to modify the original board as this is just a test
-    copy_board = board.slice(0)
-    set_move(move, copy_board)
-    neighbours = enemy_neighbours(move, copy_board)
-    not _.every neighbours, (stone)-> has_liberties(stone, copy_board)
+    copied_board = copy_board(board)
+    set_move(move, copied_board)
+    neighbours = enemy_neighbours(move, copied_board)
+    not _.every neighbours, (stone)-> has_liberties(stone, copied_board)
 
-  is_ko_move = (move, board)->
+  is_forbidden_ko_move = (move, board, captures)->
+
+    last_move_and_current_move_captured_exactly_one = (captures, last_move) ->
+      captures.length == 1 && last_move.captures.length == 1
+
+    is_first_move = (board)-> board.moves.length == 0
+
+    return false if is_first_move(board)
+    last_move = board.moves[board.moves.length - 1]
+    if last_move_and_current_move_captured_exactly_one(captures, last_move)
+      is_same_move(last_move.captures[0], move)
+    else
+      false
+
 
       
-  if (field_is_occupied(stone, board) or
-     is_double_move(stone, board) or
-     is_suicide_move(stone, board))
+  if (field_is_occupied(stone, board) or is_double_move(stone, board))
     false
   else
-    true
+    copied_board = copy_board(board)
+    set_move(stone, copied_board)
+    captures = capture_stones_with(stone, copied_board)
+    if !is_empty(captures) or has_liberties(stone, copied_board)
+      if !is_forbidden_ko_move(stone, board, captures)
+        true
+      else
+        false
+    else
+      false
+
+is_same_move = (move, other_move)->
+  move.x == other_move.x &&
+  move.y == other_move.y &&
+  move.color == other_move.color
 
 capture_stones_with = (stone, board)->
 
-  take_captures = (stone, board, captive_color)->
+  take_captures = (stone, board, captive_color, captures = [])->
     if stone.color == captive_color
       remove_stone(stone, board)
       increase_prisoner_count(board, captive_color)
+      captures.push stone
       neighbours = neighbouring_stones(stone.x, stone.y, board)
-      _.each neighbours, (stone)-> take_captures(stone, board, captive_color)
+      _.each neighbours, (stone)->
+        take_captures(stone, board, captive_color, captures)
+      captures
 
   remove_stone = (stone, board) ->
     empty_move = create_stone(stone.x, stone.y, EMPTY)
@@ -113,8 +142,9 @@ capture_stones_with = (stone, board)->
 
 
   enemy_color = other_color(stone.color)
+  captures = []
   _.each enemy_neighbours(stone, board), (stone)->
     unless has_liberties(stone, board)
-      take_captures(stone, board, enemy_color)
-
+      captures = captures.concat take_captures(stone, board, enemy_color)
+  captures
 
