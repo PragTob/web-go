@@ -49,7 +49,7 @@ has_liberties = (stone, board)->
                                 board,
                                 visited_map,
                                 color
-        else throw 'we should never end up here'
+        else throw 'we should never end up here when checking for liberties'
 
   search_for_liberties = (x, y, board, visited_map, color) ->
     neighbours = neighbouring_stones(x, y, board)
