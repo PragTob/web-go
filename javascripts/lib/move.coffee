@@ -86,14 +86,16 @@ is_valid_move = (stone, board) ->
     not _.every neighbours, (stone)-> has_liberties(stone, copied_board)
 
   is_forbidden_ko_move = (move, board, captures)->
-    return false if board.moves.length == 0
+
+    last_move_and_current_move_captured_exactly_one = (captures, last_move) ->
+      captures.length == 1 && last_move.captures.length == 1
+
+    is_first_move = (board)-> board.moves.length == 0
+
+    return false if is_first_move(board)
     last_move = board.moves[board.moves.length - 1]
-    if captures.length == 1 && last_move.captures.length == 1
-      capture = last_move.captures[0]
-      if capture.x == move.x && capture.y == move.y && capture.color == move.color
-        true
-      else
-        false
+    if last_move_and_current_move_captured_exactly_one(captures, last_move)
+      is_same_move(last_move.captures[0], move)
     else
       false
 
@@ -112,6 +114,11 @@ is_valid_move = (stone, board) ->
         false
     else
       false
+
+is_same_move = (move, other_move)->
+  move.x == other_move.x &&
+  move.y == other_move.y &&
+  move.color == other_move.color
 
 capture_stones_with = (stone, board)->
 

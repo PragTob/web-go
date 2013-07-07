@@ -250,6 +250,24 @@ describe 'moves', ->
         expect(captures).toContain first_to_be_captured
         expect(captures).toContain second_to_be_captured
 
+  describe 'is_same_move', ->
+
+    it 'returns true for identical moves', ->
+      move1 = create_stone(1, 2, BLACK)
+      move2 = create_stone(1, 2, BLACK)
+      expect(is_same_move(move1, move2)).toBeTruthy()
+
+    it 'returns false for a different color', ->
+      move1 = create_stone(1, 2, BLACK)
+      move2 = create_stone(1, 2, WHITE)
+      expect(is_same_move(move1, move2)).toBeFalsy()
+
+    it 'returns false for a different coordinate', ->
+      move1 = create_stone(1, 3, BLACK)
+      move2 = create_stone(1, 2, BLACK)
+      expect(is_same_move(move1, move2)).toBeFalsy()
+
+
 
   describe 'KO', ->
     ko_board = null
