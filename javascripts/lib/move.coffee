@@ -65,18 +65,18 @@ has_liberties = (stone, board)->
 
 is_valid_move = (stone, board) ->
 
-  field_is_occupied = (stone, board)->
-    get_color(stone.x, stone.y, board) != EMPTY
+  field_is_unoccupied = (stone, board)->
+    get_color(stone.x, stone.y, board) == EMPTY
 
-  is_double_move = (move, board)->
-    if board.moves.length >= 1
-      last_move = board.moves[board.moves.length - 1]
-      last_move.color == move.color
+  is_no_double_move = (move, board)->
+    if board.moves.length == 0
+      true
     else
-      false
+      last_move = board.moves[board.moves.length - 1]
+      last_move.color != move.color
 
-  is_suicide_move = (move, board)->
-    not (has_liberties(move, board) or is_capturing_stones(move, board))
+  is_no_suicide_move = (move, board)->
+    has_liberties(move, board) or is_capturing_stones(move, board)
 
   is_capturing_stones = (move, board)->
     # we don't want to modify the original board as this is just a test
@@ -85,7 +85,7 @@ is_valid_move = (stone, board) ->
     neighbours = enemy_neighbours(move, copied_board)
     not _.every neighbours, (stone)-> has_liberties(stone, copied_board)
 
-  is_forbidden_ko_move = (move, board, captures)->
+  is_no_illegal_ko_move = (move, board, captures)->
 
     last_move_and_current_move_captured_exactly_one = (captures, last_move) ->
       captures.length == 1 && last_move.captures.length == 1
@@ -98,17 +98,17 @@ is_valid_move = (stone, board) ->
       capture_stones_with(stone, copied_board)
 
 
-    return false if is_first_move(board)
+    return true if is_first_move(board)
     last_move = board.moves[board.moves.length - 1]
     captures = captures_of_move(stone, board)
-    last_move_and_current_move_captured_exactly_one(captures, last_move) and
-    is_same_move(last_move.captures[0], move)
+    not (last_move_and_current_move_captured_exactly_one(captures, last_move) and
+    is_same_move(last_move.captures[0], move))
 
 
-  not (field_is_occupied(stone, board) or
-  is_double_move(stone, board) or
-  is_suicide_move(stone, board) or
-  is_forbidden_ko_move(stone, board))
+  field_is_unoccupied(stone, board) and
+  is_no_double_move(stone, board) and
+  is_no_suicide_move(stone, board) and
+  is_no_illegal_ko_move(stone, board)
 
 is_same_move = (move, other_move)->
   move.x == other_move.x &&
