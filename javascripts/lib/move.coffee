@@ -92,28 +92,23 @@ is_valid_move = (stone, board) ->
 
     is_first_move = (board)-> board.moves.length == 0
 
+    captures_of_move = (move, board)->
+      copied_board = copy_board(board)
+      set_move(stone, copied_board)
+      capture_stones_with(stone, copied_board)
+
+
     return false if is_first_move(board)
     last_move = board.moves[board.moves.length - 1]
-    if last_move_and_current_move_captured_exactly_one(captures, last_move)
-      is_same_move(last_move.captures[0], move)
-    else
-      false
+    captures = captures_of_move(stone, board)
+    last_move_and_current_move_captured_exactly_one(captures, last_move) and
+    is_same_move(last_move.captures[0], move)
 
 
-      
-  if (field_is_occupied(stone, board) or is_double_move(stone, board))
-    false
-  else
-    copied_board = copy_board(board)
-    set_move(stone, copied_board)
-    captures = capture_stones_with(stone, copied_board)
-    if !is_empty(captures) or has_liberties(stone, copied_board)
-      if !is_forbidden_ko_move(stone, board, captures)
-        true
-      else
-        false
-    else
-      false
+  not (field_is_occupied(stone, board) or
+  is_double_move(stone, board) or
+  is_suicide_move(stone, board) or
+  is_forbidden_ko_move(stone, board))
 
 is_same_move = (move, other_move)->
   move.x == other_move.x &&
