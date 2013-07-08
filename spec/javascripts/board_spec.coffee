@@ -71,10 +71,8 @@ describe 'Board', ->
       expect(copy.prisoners[WHITE]).toEqual board.prisoners[WHITE]
 
     it 'does not alter the original', ->
-      console.log print_board(board)
       copy = copy_board(board)
       set_move(create_stone(1, 1, WHITE), copy)
-      console.log print_board(board)
       expect(get_color(1, 1, board)).toEqual EMPTY
 
     it 'should not be the same', ->
