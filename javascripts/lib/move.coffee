@@ -16,9 +16,9 @@ play_stone = (stone, board) ->
     set_move(stone, board)
     captures = capture_stones_with(stone, board)
     stone.captures = captures
+    board.moves.push stone
   else
     throw "Illegal move Exception!"
-  board.moves.push stone
 
 is_pass_move = (stone)-> (stone.x == null) or (stone.y == null)
 
