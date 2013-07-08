@@ -12,13 +12,12 @@ create_stone = (x, y, color)->
 create_pass_move = (color)-> create_stone(null, null, color)
 
 play_stone = (stone, board) ->
-  unless is_pass_move(stone)
-    if is_valid_move(stone, board)
-      set_move(stone, board)
-      captures = capture_stones_with(stone, board)
-      stone.captures = captures
-    else
-      throw "Illegal move Exception!"
+  if is_valid_move(stone, board)
+    set_move(stone, board)
+    captures = capture_stones_with(stone, board)
+    stone.captures = captures
+  else
+    throw "Illegal move Exception!"
   board.moves.push stone
 
 is_pass_move = (stone)-> (stone.x == null) or (stone.y == null)
@@ -104,10 +103,11 @@ is_valid_move = (stone, board) ->
     is_same_move(last_move.captures[0], move))
 
 
-  field_is_unoccupied(stone, board) and
   is_no_double_move(stone, board) and
-  is_no_suicide_move(stone, board) and
-  is_no_illegal_ko_move(stone, board)
+  (is_pass_move(stone) or
+    (field_is_unoccupied(stone, board) and
+    is_no_suicide_move(stone, board) and
+    is_no_illegal_ko_move(stone, board)))
 
 is_same_move = (move, other_move)->
   move.x == other_move.x &&
@@ -137,8 +137,9 @@ capture_stones_with = (stone, board)->
 
   enemy_color = other_color(stone.color)
   captures = []
-  _.each enemy_neighbours(stone, board), (stone)->
-    unless has_liberties(stone, board)
-      captures = captures.concat take_captures(stone, board, enemy_color)
+  unless is_pass_move(stone)
+    _.each enemy_neighbours(stone, board), (stone)->
+      unless has_liberties(stone, board)
+        captures = captures.concat take_captures(stone, board, enemy_color)
   captures
 

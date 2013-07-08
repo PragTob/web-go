@@ -89,7 +89,7 @@ describe 'moves', ->
 
   describe 'is_valid_move', ->
     it 'is a valid move', ->
-      expect(is_valid_move(move, board)).toBeTruthy
+      expect(is_valid_move(move, board)).toBeTruthy()
 
     it 'can not play moves if the field is already occupied', ->
       set_move move, board
@@ -115,7 +115,11 @@ describe 'moves', ->
     it "checks if stones are captured so that it's not a suicide move", ->
       board = create_ko_board()
       move = create_stone(1, 1, WHITE)
-      expect(is_valid_move(move, board)).toBeTruthy
+      expect(is_valid_move(move, board)).toBeTruthy()
+
+    it 'is true for a pass move', ->
+      move = create_pass_move(BLACK)
+      expect(is_valid_move(move, board)).toBeTruthy()
 
   describe 'has_liberties', ->
     it 'is true for a single lonely stone', ->

@@ -31,7 +31,8 @@ copy_board = (board)->
 
 
 set_move = (move, board)->
-  set_stone(move, board) unless is_out_of_bounds move.x, move.y, board
+  unless is_pass_move(move) or is_out_of_bounds move.x, move.y, board
+    set_stone(move, board)
 
 set_stone = (stone, board)-> board[stone.y][stone.x] = stone.color
 
