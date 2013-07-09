@@ -310,3 +310,67 @@ describe 'moves', ->
       play_stone(create_stone(2, 3, WHITE), ko_board)
       move = create_stone(2, 1, BLACK)
       expect(is_valid_move(move, ko_board)).toBeTruthy()
+
+  describe 'is_Eye', ->
+    eye_move = null
+    eye_board = null
+
+    describe 'in the middle of the board', ->
+      create_eye_board = ->
+        board_string = """
+                       -X-
+                       X-X
+                       -X-
+                       """
+        board_from_string(board_string)
+
+      beforeEach ->
+        eye_board = create_eye_board()
+        eye_move = create_stone(1, 1, BLACK)
+
+      it 'is an eye for black', ->
+        expect(is_eye(eye_move, eye_board)).toBeTruthy()
+
+      it 'is not an eye for white', ->
+        eye_move.color = WHITE
+        expect(is_eye(eye_move, eye_board)).toBeFalsy()
+
+      it 'is still an eye with one of the diagonals occupied by the enemy', ->
+        diagonal_move = create_stone(0, 0, WHITE)
+        set_move diagonal_move, eye_board
+        expect(is_eye(eye_move, eye_board)).toBeTruthy()
+
+      it 'is no longer an eye with two diagonals occupied by the enemy', ->
+        diagonal_move_1 = create_stone(0, 0, WHITE)
+        diagonal_move_2 = create_stone(2, 2, WHITE)
+        set_move diagonal_move_1, eye_board
+        set_move diagonal_move_2, eye_board
+        expect(is_eye(eye_move, eye_board)).toBeFalsy()
+
+    describe 'on the edge of the board', ->
+      create_edge_eye_board = ->
+        board_string = """
+                       X--
+                       -X-
+                       X--
+                       """
+        board_from_string(board_string)
+
+      beforeEach ->
+        eye_board = create_edge_eye_board()
+        eye_move = create_stone(0, 1, BLACK)
+
+      it 'is an eye', ->
+        expect(is_eye(eye_move, eye_board)).toBeTruthy()
+
+      it 'is not an eye for white', ->
+        eye_move.color = WHITE
+        expect(is_eye(eye_move, eye_board)).toBeFalsy()
+
+      it 'is not an eye any longer with one diagonal occupied', ->
+        diagonal_move = create_stone(1, 0, WHITE)
+        set_move(diagonal_move, eye_board)
+        expect(is_eye(eye_move, eye_board)).toBeFalsy()
+
+
+
