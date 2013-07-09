@@ -141,11 +141,7 @@ is_eye = (move, board)->
 
   is_eye_shape = (move, board)->
     neighbours = neighbouring_stones(move.x, move.y, board)
-    console.log board
     _.all neighbours, (neighbour)->
-      console.log 'x: ' + neighbour.x
-      console.log 'y: ' + neighbour.y
-      console.log neighbour.color
       neighbour.color == move.color or neighbour.color == NEUTRAL
 
   diagonal_stone_colors = (move, board)->
@@ -155,7 +151,6 @@ is_eye = (move, board)->
      get_color(x - 1, y + 1, board), get_color(x - 1, y - 1, board)]
 
   is_edge_move = (move, board)->
-#    console.log move.x, move.y
     move.x == 0 or move.y == 0 or
     move.x == (board.length - 1) or move.y == (board.length - 1)
 
@@ -169,7 +164,6 @@ is_eye = (move, board)->
     enemy_diagonals_count == 0 or
     (not is_edge_move(move, board) and enemy_diagonals_count < 2)
 
-  console.log print_board(board)
   is_eye_shape(move, board) and is_real_eye(move, board)
 
 
