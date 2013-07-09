@@ -1,3 +1,9 @@
+BLACK = 1
+WHITE = -1
+EMPTY = 0
+NEUTRAL = 2
+VISITED = true
+
 initBoard = (size)->
   board = []
   for i in [0...size]

@@ -1,9 +1,3 @@
-BLACK = 1
-WHITE = -1
-EMPTY = 0
-NEUTRAL = 2
-VISITED = true
-
 create_stone = (x, y, color)->
   x: x
   y: y
