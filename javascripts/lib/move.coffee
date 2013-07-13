@@ -164,7 +164,10 @@ is_eye = (move, board)->
     enemy_diagonals_count == 0 or
     (not is_edge_move(move, board) and enemy_diagonals_count < 2)
 
-  is_eye_shape(move, board) and is_real_eye(move, board)
+  if is_pass_move(move)
+    false
+  else
+    is_eye_shape(move, board) and is_real_eye(move, board)
 
 
 

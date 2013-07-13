@@ -315,6 +315,9 @@ describe 'moves', ->
     eye_move = null
     eye_board = null
 
+    it 'is false for a pass move', ->
+      expect(is_eye(create_pass_move(BLACK))).toBeFalsy()
+
     describe 'in the middle of the board', ->
       create_eye_board = ->
         board_string = """

@@ -21,7 +21,7 @@ generate_random_move_for = (board)->
   tries = 0
   move = create_ramdom_move(size, color, tries)
   tries += 1
-  until is_valid_move(move, board)
+  until is_valid_move(move, board) and not is_eye(move, board)
     move = create_ramdom_move(size, color, tries)
     tries += 1
   move
