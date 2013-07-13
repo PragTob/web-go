@@ -25,3 +25,14 @@ generate_random_move_for = (board)->
     move = create_ramdom_move(size, color, tries)
     tries += 1
   move
+
+
+is_finished_game = (board)->
+  if board.moves.length > 2
+    is_pass_move(get_last_move(board)) && (is_pass_move(board.moves[board.moves.length - 2]))
+
+playout_for_board = (board)->
+  until is_finished_game(board)
+    move = generate_random_move_for(board)
+    play_stone(move, board)
+  board
