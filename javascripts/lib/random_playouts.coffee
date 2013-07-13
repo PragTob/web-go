@@ -12,13 +12,16 @@ generate_random_move_for = (board)->
 
   create_ramdom_move = (size, color, tries)->
     if tries <= MAXIMUM_CREATION_TRIES
-      tries += 1
       create_stone(random_coordinate(size), random_coordinate(size), color)
     else
       create_pass_move(color)
 
   size = board.length
   color = determine_move_color(board)
-  move = create_ramdom_move(size, color, 0)
-  move = create_ramdom_move(size, color, tries) until is_valid_move(move, board)
+  tries = 0
+  move = create_ramdom_move(size, color, tries)
+  tries += 1
+  until is_valid_move(move, board)
+    move = create_ramdom_move(size, color, tries)
+    tries += 1
   move
