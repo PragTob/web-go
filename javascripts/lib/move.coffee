@@ -54,6 +54,7 @@ has_liberties = (stone, board)->
       is_liberty(stone, board, visited_map, color)
 
   visited_map = initBoard(board.length)
+  visit stone, visited_map
   search_for_liberties(stone.x, stone.y, board, visited_map, stone.color)
 
 is_valid_move = (stone, board) ->

@@ -121,6 +121,26 @@ describe 'moves', ->
       move = create_pass_move(BLACK)
       expect(is_valid_move(move, board)).toBeTruthy()
 
+    describe 'bugs/regressions', ->
+      suicide_board = ->
+        board_string = """
+                       XXXX-XXO-
+                       XO-XXXOXO
+                       OOOXXXOXX
+                       XXOXXXOXO
+                       XXOXOOOOO
+                       -XXOOOOXO
+                       OXXO-OXXO
+                       OOOOOOX--
+                       OO--O-O-O
+                       """
+        board_from_string(board_string)
+
+      suicide_board_move = -> create_stone(0, 5, BLACK)
+
+      it 'is not  valid move as it is a suicide', ->
+        expect(is_valid_move(suicide_board_move(), suicide_board())).toBeFalsy()
+
   describe 'has_liberties', ->
     it 'is true for a single lonely stone', ->
       board = initBoard(3)
