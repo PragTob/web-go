@@ -8,7 +8,7 @@ generate_random_move_for = (board)->
     else
       other_color(get_last_move(board).color)
 
-  random_coordinate = (size)-> Math.floor(Math.random() * size) + 1
+  random_coordinate = (size)-> Math.floor(Math.random() * size)
 
   create_ramdom_move = (size, color, tries)->
     if tries <= MAXIMUM_CREATION_TRIES

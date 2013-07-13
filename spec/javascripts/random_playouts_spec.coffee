@@ -23,3 +23,15 @@ describe 'random_move_generation', ->
     mini_board.moves.push lil_move
     move = generate_random_move_for(mini_board)
     expect(is_pass_move(move)).toBeTruthy()
+
+  small_first_line_board = ->
+    board_string = """
+                   -X
+                   OX
+                   """
+    board_from_string(board_string)
+
+  it 'can generate a random move on the first line', ->
+    board = small_first_line_board()
+    move = generate_random_move_for(board)
+    expect(move).toEqual create_stone(0, 0, BLACK)
