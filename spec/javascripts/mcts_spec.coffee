@@ -1,6 +1,12 @@
 describe 'Monte Carlo tree search', ->
   board = null
 
+  create_test_child = (wins, visits, parent)->
+    child =
+      wins: wins
+      visits: visits
+      parent: parent
+
   describe 'create_node', ->
     node = null
     beforeEach -> node = create_node(initBoard(3), null, null)
@@ -52,12 +58,6 @@ describe 'Monte Carlo tree search', ->
 
   describe 'select_best_node', ->
 
-    create_test_child = (wins, visits, parent)->
-      child =
-        wins: wins
-        visits: visits
-        parent: parent
-
     it 'selects the best move to be played', ->
       root = {}
       child_1 = create_test_child(2, 6, root)
@@ -90,6 +90,60 @@ describe 'Monte Carlo tree search', ->
     it 'adds the child to the children of the parent', ->
       child = expand(root)
       expect(root.children).toEqual [child]
+
+  describe 'backpropagate', ->
+    child_1 = null
+    child_2 = null
+    child_1_1 = null
+    child_1_2 = null
+    root = null
+
+    beforeEach ->
+      root =
+        visits: 7
+        wins: 3
+        parent: null
+      child_1 = create_test_child(2, 4, root)
+      child_2 = create_test_child(1, 3, root)
+      child_1_1 = create_test_child(2, 3, child_1)
+      child_1_2 = create_test_child(0, 1, child_1)
+
+    describe 'winning', ->
+      beforeEach -> backpropagate(child_1_1, true)
+
+      it 'changes wins for the node', ->
+        expect(child_1_1.wins).toEqual 3
+
+      it 'changes the visits for the node', ->
+        expect(child_1_1.visits).toEqual 4
+
+      it 'propagates the change to its parent', ->
+        expect(child_1.wins).toEqual 3
+        expect(child_1.visits).toEqual 5
+
+      it 'propagates the chane to the root', ->
+        expect(root.wins).toEqual 4
+        expect(root.visits).toEqual 8
+
+      it 'does not touch the sibling of its parent', ->
+        expect(child_2.visits).toEqual 3
+
+    describe 'loosing', ->
+      beforeEach -> backpropagate(child_1_1, false)
+
+      it 'changes the visits for the node', ->
+        expect(child_1_1.visits).toEqual 4
+
+      it 'does not change the wins of the node', ->
+        expect(child_1_1.wins).toEqual 2
+
+      it 'does not change the wins of the nodes parent', ->
+        expect(child_1.wins).toEqual 2
+
+      it 'changes the visits of its parent', ->
+        expect(child_1.visits).toEqual 5
+
+
 
 
 

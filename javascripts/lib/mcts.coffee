@@ -43,18 +43,18 @@ rollout = (node)->
   finished_board = playout_for_board(node.board)
   score_game(finished_board).winner
 
-is_root_node = (node)-> node.parent != null
+is_end_of_tree = (node)-> node == null
 
-
-backpropagate = (node, winner_color, own_color)->
-  if winner_color == own_color
+backpropagate = (node, have_won)->
+  if have_won
     win_modifier = 1
   else
     win_modifier = 0
 
-  until is_root_node(node)
+  until is_end_of_tree(node)
     node.visits += 1
     node.wins += win_modifier
+    node = node.parent
 
 select_best_node = (node)->
   best_node = null
@@ -78,7 +78,8 @@ mcts = (board) ->
       selected_node = uct_select_child(root)
     new_child = expand(selected_node)
     winner_color = rollout(new_child)
-    backpropagate(new_child, winner_color, own_color)
+    have_won = winner_color == own_color
+    backpropagate(new_child, have_won)
 
   best_node = select_best_node root
   best_node.move
