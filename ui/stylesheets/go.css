@@ -9,9 +9,10 @@ table.go-board td {
   margin: 0;
 }
 
-table.go-board {
+#main_content {
   margin-left: auto;
   margin-right: auto;
+  width: 475px;
 }
 
 td.go-top-left-corner {
