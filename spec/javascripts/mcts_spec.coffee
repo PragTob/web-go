@@ -50,11 +50,17 @@ describe 'Monte Carlo tree search', ->
     it 'correctly calculates the UCT value for a node', ->
       parent =
         visits: 40
-      node =
-        parent: parent
-        wins: 5
-        visits: 7
+      node = create_test_child(5, 7, parent)
       expect(uct_value_for(node)).toBeCloseTo(2.166)
+
+    it 'selects a promising child node', ->
+      root =
+        visits: 30
+      child_1 = create_test_child(0, 15, root)
+      child_2 = create_test_child(5, 7, root)
+      child_3 = create_test_child(4, 8, root)
+      root.children = [child_1, child_2, child_3]
+      expect(uct_select_child(root)).toBe child_2
 
   describe 'select_best_node', ->
 
@@ -90,6 +96,13 @@ describe 'Monte Carlo tree search', ->
     it 'adds the child to the children of the parent', ->
       child = expand(root)
       expect(root.children).toEqual [child]
+
+  describe 'rollout', ->
+    it 'does not change the board of the node', ->
+      node =
+        board: initBoard(3)
+      rollout(node)
+      expect(node.board.moves.length).toEqual 0
 
   describe 'backpropagate', ->
     child_1 = null

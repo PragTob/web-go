@@ -1,5 +1,5 @@
 UCT_BIAS_FACTOR = 2
-PLAYOUTS = 2
+DEFAULt_PLAYOUTS = 100
 
 create_node = (board, move, parent)->
   node =
@@ -15,6 +15,12 @@ create_node = (board, move, parent)->
 create_root = (board)->
   root = create_node(board, null, null)
 
+select = (root)->
+  selected_node = root
+  while selected_node.untried_moves.length <= 0
+    selected_node = uct_select_child(selected_node)
+  selected_node
+
 uct_value_for = (node) ->
   # note to self, Math.log is Math.ln so this is fine
   node.wins/node.visits + UCT_BIAS_FACTOR * Math.sqrt(Math.log(node.parent.visits)/node.visits)
@@ -24,7 +30,9 @@ uct_select_child = (node)->
   max_node = null
   _.each node.children, (child)->
     new_value = uct_value_for child
-    max_node = child if new_value > max_value
+    if new_value > max_value
+      max_node = child
+      max_value = new_value
   max_node
 
 # idea for expansion, just expand after x visits
@@ -39,9 +47,10 @@ expand = (node)->
   move = node.untried_moves.pop()
   create_child_node(node, move)
 
-rollout = (node)->
-  finished_board = playout_for_board(node.board)
-  score_game(finished_board).winner
+rollout = (node, own_color)->
+  playout_board = copy_board(node.board)
+  finished_board = playout_for_board(playout_board)
+  score_game(finished_board).winner == own_color
 
 is_end_of_tree = (node)-> node == null
 
@@ -65,21 +74,21 @@ select_best_node = (node)->
       best_win_average = win_average
       best_node = child
 
-  console.log best_node
   best_node
 
-mcts = (board) ->
+mcts = (board, playouts = DEFAULt_PLAYOUTS)->
+
+  explore_tree = (root, own_color)->
+    selected_node = select(root)
+    new_child = expand(selected_node)
+    have_won = rollout(new_child, own_color)
+    backpropagate(new_child, have_won)
+
   root = create_root(board)
   own_color = determine_move_color(board)
 
-  for i in [0...PLAYOUTS]
-    selected_node = root
-    while selected_node.untried_moves.length < 0
-      selected_node = uct_select_child(root)
-    new_child = expand(selected_node)
-    winner_color = rollout(new_child)
-    have_won = winner_color == own_color
-    backpropagate(new_child, have_won)
+  for i in [0...playouts]
+    explore_tree(root, own_color)
 
   best_node = select_best_node root
   best_node.move
