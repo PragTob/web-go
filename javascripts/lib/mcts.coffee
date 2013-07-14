@@ -46,8 +46,8 @@ rollout = (node)->
 is_root_node = (node)-> node.parent != null
 
 
-backpropagate = (winner, node, own_color)->
-  if winner == own_color
+backpropagate = (node, winner_color, own_color)->
+  if winner_color == own_color
     win_modifier = 1
   else
     win_modifier = 0
@@ -56,15 +56,17 @@ backpropagate = (winner, node, own_color)->
     node.visits += 1
     node.wins += win_modifier
 
-select_best_move = (node)->
-  best_move = null
+select_best_node = (node)->
+  best_node = null
   best_win_average = 0
-  _.each node.children, (node)->
-    win_average = node.wins / node.visits
+  _.each node.children, (child)->
+    win_average = child.wins / child.visits
     if win_average >= best_win_average
-      best_move = node.move
+      best_win_average = win_average
+      best_node = child
 
-  best_move
+  console.log best_node
+  best_node
 
 mcts = (board) ->
   root = create_root(board)
@@ -75,7 +77,8 @@ mcts = (board) ->
     while selected_node.untried_moves.length < 0
       selected_node = uct_select_child(root)
     new_child = expand(selected_node)
-    winner = rollout(new_child)
-    backpropagate(winner, new_child, own_color)
+    winner_color = rollout(new_child)
+    backpropagate(new_child, winner_color, own_color)
 
-  select_best_move root
+  best_node = select_best_node root
+  best_node.move
