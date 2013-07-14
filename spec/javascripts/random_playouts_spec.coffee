@@ -63,25 +63,25 @@ describe 'scoring (chinese/area)', ->
     expect(score[WHITE]).toEqual(12 + KOMI)
     expect(score.winner).toEqual WHITE
 
-describe 'all plausible moves', ->
+describe 'get_all_plausible_moves', ->
   it 'marks all moves as plausible for an empty board', ->
     board = initBoard(3)
-    expect(all_plausible_moves(board).length).toEqual 9
+    expect(get_all_plausible_moves(board).length).toEqual 9
 
   it 'generates black moves for an empty board', ->
     board = initBoard(3)
-    all_black = _.all all_plausible_moves(board), (move)-> move.color == BLACK
+    all_black = _.all get_all_plausible_moves(board), (move)-> move.color == BLACK
     expect(all_black).toBeTruthy()
 
   it 'generates all white moves if a black move has been played before', ->
     board = initBoard(3)
     play_stone(create_stone(1, 1, BLACK), board)
-    all_white = _.all all_plausible_moves(board), (move)-> move.color == WHITE
+    all_white = _.all get_all_plausible_moves(board), (move)-> move.color == WHITE
     expect(all_white).toBeTruthy()
 
   it 'does not find any moves for a finished game', ->
     board = finished_tiny_game()
-    expect(all_plausible_moves(board).length).toEqual 0
+    expect(get_all_plausible_moves(board).length).toEqual 0
 
   describe 'finds the right number of moves for a tiny game', ->
     board = null
@@ -98,10 +98,10 @@ describe 'all plausible moves', ->
     beforeEach -> board = tiny_game()
 
     it 'finds the right number of black moves', ->
-      expect(all_plausible_moves(board).length).toEqual 5
+      expect(get_all_plausible_moves(board).length).toEqual 5
 
     it 'finds the right number of white moves', ->
       board.moves.push create_pass_move(BLACK)
-      expect(all_plausible_moves(board).length).toEqual 4
+      expect(get_all_plausible_moves(board).length).toEqual 4
 
 

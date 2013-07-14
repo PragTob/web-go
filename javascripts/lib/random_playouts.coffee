@@ -30,7 +30,7 @@ determine_move_color = (board)->
 is_plausible_move = (move, board)->
   is_valid_move(move, board) and not is_eye(move, board)
 
-all_plausible_moves = (board)->
+get_all_plausible_moves = (board)->
   move_color = determine_move_color(board)
   plausible_moves = []
   all_fields_do board, (x, y, field_color)->
