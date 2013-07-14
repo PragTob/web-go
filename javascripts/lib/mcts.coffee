@@ -88,7 +88,6 @@ mcts = (board, playouts = DEFAULt_PLAYOUTS)->
   own_color = determine_move_color(board)
 
   for i in [0...playouts]
-    console.log i
     explore_tree(root, own_color)
 
   best_node = select_best_node root

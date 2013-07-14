@@ -34,14 +34,14 @@ scaleBoardTo = (number)->
   numberIntersections()
 
 start_mcts = (board)->
-  move = mcts(board, 20)
+  move = mcts(board, 1000)
   play_stone(move, board)
   set_move_on_ui_board(move)
 
 
 
 set_move_on_ui_board = (move)->
-  $target_cell = $("table.go-board tr:nth-child(#{move.y - 1}) td:nth-child(#{move.x - 1})")
+  $target_cell = $("table.go-board tr:nth-child(#{move.y + 1}) td:nth-child(#{move.x + 1})")
   stone = $(GO_STONE)
   stone.addClass(COLOR_TO_CLASS[move.color])
   $target_cell.append(stone)
