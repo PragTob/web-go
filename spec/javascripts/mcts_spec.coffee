@@ -35,6 +35,10 @@ describe 'Monte Carlo tree search', ->
         expect(child_board.moves.length).toEqual 2
         expect(root_node.board.moves.length).toEqual 0
 
+      it 'is the parent of its children', ->
+        child = root_node.children[0]
+        expect(child.parent).toBe root_node
+
 
 
 
