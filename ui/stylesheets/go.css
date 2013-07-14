@@ -9,6 +9,11 @@ table.go-board td {
   margin: 0;
 }
 
+table.go-board {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 td.go-top-left-corner {
   background-image: url("../images/go/left-top-corner.png");
 }
