@@ -1,4 +1,5 @@
 MAXIMUM_CREATION_TRIES = 1000
+KOMI = 6.5
 
 generate_random_move_for = (board)->
 
@@ -36,3 +37,31 @@ playout_for_board = (board)->
     move = generate_random_move_for(board)
     play_stone(move, board)
   board
+
+score_game = (board)->
+  score = {}
+  score[WHITE] = KOMI
+  score[BLACK] = 0
+
+  for y in [0...board.length]
+    for x in [0...board.length]
+      color = get_color(x, y, board)
+      if color != EMPTY
+        score[color] += 1
+      else
+        neighbours = neighbouring_stones(x, y, board)
+        colored_neighbours = _.select(neighbours, (stone)->
+          stone.color != NEUTRAL and score.color != EMPTY)
+        if colored_neighbours.length >= 1
+          neighbour_color = colored_neighbours[0].color
+          all_same_color = _.all(colored_neighbours, (neighbour)->
+            neighbour.color == neighbour_color)
+          score[neighbour_color] += 1 if all_same_color
+  if score[WHITE] > score[BLACK]
+    score.winner = WHITE
+  else
+    score.winner = BLACK
+  score
+
+
+
