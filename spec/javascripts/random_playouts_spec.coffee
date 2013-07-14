@@ -36,6 +36,16 @@ describe 'random_move_generation', ->
     move = generate_random_move_for(board)
     expect(move).toEqual create_stone(0, 0, BLACK)
 
+finished_tiny_game = ->
+  board_string = """
+                 -XXO-
+                 XXO-O
+                 -XOO-
+                 XXOOO
+                 XXXXO
+                 """
+  board_from_string(board_string)
+
 describe 'scoring (chinese/area)', ->
 
   it 'knows about Komi', ->
@@ -47,15 +57,51 @@ describe 'scoring (chinese/area)', ->
     expect(score_game(board)[BLACK]).toEqual 0
 
   it 'scores a tiny game right', ->
-    board_string = """
-                   -XXO-
-                   XXO-O
-                   -XOO-
-                   XXOOO
-                   XXXXO
-                   """
-    board = board_from_string(board_string)
+    board = finished_tiny_game()
     score = score_game(board)
     expect(score[BLACK]).toEqual(13)
     expect(score[WHITE]).toEqual(12 + KOMI)
     expect(score.winner).toEqual WHITE
+
+describe 'all plausible moves', ->
+  it 'marks all moves as plausible for an empty board', ->
+    board = initBoard(3)
+    expect(all_plausible_moves(board).length).toEqual 9
+
+  it 'generates black moves for an empty board', ->
+    board = initBoard(3)
+    all_black = _.all all_plausible_moves(board), (move)-> move.color == BLACK
+    expect(all_black).toBeTruthy()
+
+  it 'generates all white moves if a black move has been played before', ->
+    board = initBoard(3)
+    play_stone(create_stone(1, 1, BLACK), board)
+    all_white = _.all all_plausible_moves(board), (move)-> move.color == WHITE
+    expect(all_white).toBeTruthy()
+
+  it 'does not find any moves for a finished game', ->
+    board = finished_tiny_game()
+    expect(all_plausible_moves(board).length).toEqual 0
+
+  describe 'finds the right number of moves for a tiny game', ->
+    board = null
+
+    tiny_game = ->
+      board_string = """
+                     -X--O
+                     X-OO-
+                     XXOOO
+                     X-X-X
+                     """
+      board_from_string(board_string)
+
+    beforeEach -> board = tiny_game()
+
+    it 'finds the right number of black moves', ->
+      expect(all_plausible_moves(board).length).toEqual 5
+
+    it 'finds the right number of white moves', ->
+      board.moves.push create_pass_move(BLACK)
+      expect(all_plausible_moves(board).length).toEqual 4
+
+

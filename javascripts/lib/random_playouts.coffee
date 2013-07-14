@@ -3,12 +3,6 @@ KOMI = 6.5
 
 generate_random_move_for = (board)->
 
-  determine_move_color = (board)->
-    if board.moves.length == 0
-      BLACK
-    else
-      other_color(get_last_move(board).color)
-
   random_coordinate = (size)-> Math.floor(Math.random() * size)
 
   create_ramdom_move = (size, color, tries)->
@@ -22,11 +16,28 @@ generate_random_move_for = (board)->
   tries = 0
   move = create_ramdom_move(size, color, tries)
   tries += 1
-  until is_valid_move(move, board) and not is_eye(move, board)
+  until is_plausible_move(move, board)
     move = create_ramdom_move(size, color, tries)
     tries += 1
   move
 
+determine_move_color = (board)->
+  if board.moves.length == 0
+    BLACK
+  else
+    other_color(get_last_move(board).color)
+
+is_plausible_move = (move, board)->
+  is_valid_move(move, board) and not is_eye(move, board)
+
+all_plausible_moves = (board)->
+  move_color = determine_move_color(board)
+  plausible_moves = []
+  all_fields_do board, (x, y, field_color)->
+    if field_color == EMPTY
+      move = create_stone(x, y, move_color)
+      plausible_moves.push move if is_plausible_move(move, board)
+  plausible_moves
 
 is_finished_game = (board)->
   if board.moves.length > 2
