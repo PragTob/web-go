@@ -30,12 +30,13 @@ $ ->
   current_color = BLACK
   scaleBoardTo19()
   $('.go-board td').click ->
-    stone = $(GO_STONE)
-    if current_color == BLACK
-      stone.addClass('black')
-      current_color = WHITE
-    else
-      stone.addClass('white')
-      current_color = BLACK
+    if $(this).is(':empty')
+      stone = $(GO_STONE)
+      if current_color == BLACK
+        stone.addClass('black')
+        current_color = WHITE
+      else
+        stone.addClass('white')
+        current_color = BLACK
 
-    $(this).append(stone)
+      $(this).append(stone)
