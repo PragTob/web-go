@@ -218,7 +218,6 @@ describe 'Board', ->
         expect(is_equal_board(board_1, board_2)).toBeFalsy()
 
   describe 'get_last_move', ->
-
     it 'returns the last move', ->
       move = create_stone(1, 2, BLACK)
       play_stone(move, board)
@@ -226,3 +225,35 @@ describe 'Board', ->
 
     it 'returns null if there is no last move', ->
       expect(get_last_move(board)).toBeNull()
+
+  describe 'all_fields_do', ->
+    spie = null
+
+    verify_calls_to_color = (stone_color, number)->
+      all_fields_do(board, (x, y, color)-> spie() if color == stone_color)
+      expect(spie.calls.length).toEqual number
+
+    all_fields_board = ->
+      board_string = """
+                     XO-
+                     XO-
+                     XXO
+                     """
+      board_from_string(board_string)
+
+    beforeEach ->
+      board = all_fields_board()
+      spie = jasmine.createSpy('blubb')
+
+    it 'calls the function for every field', ->
+      all_fields_do(board, -> spie())
+      expect(spie.calls.length).toEqual 9
+
+    it 'has all the black stones', ->
+      verify_calls_to_color(BLACK, 4)
+
+    it 'has all the white stones', ->
+      verify_calls_to_color(WHITE, 3)
+
+    it 'has all the empty stones', ->
+      verify_calls_to_color(EMPTY, 2)

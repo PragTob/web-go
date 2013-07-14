@@ -169,6 +169,3 @@ is_eye = (move, board)->
     false
   else
     is_eye_shape(move, board) and is_real_eye(move, board)
-
-
-

@@ -40,7 +40,7 @@ describe 'scoring (chinese/area)', ->
 
   it 'knows about Komi', ->
     board = initBoard(1)
-    expect(score_game(board)[WHITE] > 6).toBeTruthy()
+    expect(score_game(board)[WHITE]).toBeGreaterThan 6
 
   it 'has no points on an empty board for black', ->
     board = initBoard(1)

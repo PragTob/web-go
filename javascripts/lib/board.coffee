@@ -83,6 +83,11 @@ get_last_move = (board)->
   else
     null
 
+all_fields_do = (board, func)->
+  for y in [0...board.length]
+    for x in [0...board.length]
+      func(x, y, get_color(x,y, board))
+
 SIGN_MAPPING = {}
 SIGN_MAPPING[BLACK] = "X"
 SIGN_MAPPING[WHITE] = "O"
