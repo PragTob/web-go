@@ -1,34 +1,31 @@
 GO_STONE = "<div class='go-stone'></div>"
 
 
-scaleBoardTo19 = ->
-  stretchRowsTo19 = ->
+scaleBoardTo = (number)->
+  stretchRowsTo = (number)->
     line = $('table.go-board tr:nth-child(2)')
     duplicate = line.clone()
-    for i in [1..16]
+    for i in [1..number - 3]
       line.after duplicate
       line = duplicate
       duplicate = line.clone()
 
-  stretchColumnsTo19 = ->
+  stretchColumnsTo = (number)->
     $('table.go-board tr').each (i, row)->
       cell = $(row).find(':nth-child(2)')
       duplicate = cell.clone()
 
-      for i in [1..16]
+      for i in [1..number - 3]
         cell.after duplicate
         cell = duplicate
         duplicate = cell.clone()
 
-
-  stretchRowsTo19();
-  stretchColumnsTo19()
-
-
+  stretchRowsTo(number)
+  stretchColumnsTo(number)
 
 $ ->
   current_color = BLACK
-  scaleBoardTo19()
+  scaleBoardTo(9)
   $('.go-board td').click ->
     if $(this).is(':empty')
       stone = $(GO_STONE)

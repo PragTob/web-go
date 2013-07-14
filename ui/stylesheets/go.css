@@ -15,6 +15,11 @@ table.go-board td {
   width: 475px;
 }
 
+.go-board {
+  margin-right: auto;
+  margin-left: auto;
+}
+
 td.go-top-left-corner {
   background-image: url("../images/go/left-top-corner.png");
 }
