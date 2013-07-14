@@ -20,8 +20,16 @@ scaleBoardTo = (number)->
         cell = duplicate
         duplicate = cell.clone()
 
+  numberIntersections = ->
+    $('table.go-board tr').each (y, row)->
+      $(row).children().each (x, cell)->
+        $cell = $(cell)
+        $cell.attr('data-y', y)
+        $cell.attr('data-x', x)
+
   stretchRowsTo(number)
   stretchColumnsTo(number)
+  numberIntersections()
 
 $ ->
   current_color = BLACK
