@@ -1,8 +1,9 @@
 tmp
 
-javascripts/lib/*.js
+lib/**/*.js
 spec/javascripts/*.js
 ui/javascripts/*.js
+benchmark/**/*.js
 Gemfile.lock
 # hack to get coffeescript play nicely with Rubymine for the moment
 coffee.sh
