@@ -1,15 +1,13 @@
 BLACK = 1
 WHITE = -1
-EMPTY = 0
+EMPTY = undefined
 NEUTRAL = 2
 VISITED = true
 
 initBoard = (size)->
-  board = []
+  board = new Array size
   for i in [0...size]
-    board.push []
-    for j in [0...size]
-      board[i][j] = EMPTY
+    board[i] = new Array size
   board.moves = []
   board
 
