@@ -6,7 +6,7 @@ playoutBenchmark = ->
        .on('cycle', (event)->
           $('#perf_log').append('<p>' + String(event.target) + '</p>'))
        .on('complete', -> $('#perf_log').append 'all done in here')
-       .run()
+       .run(async: true)
 
 $ ->
   $('#playout_benchmark').click playoutBenchmark
