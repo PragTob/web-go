@@ -185,27 +185,32 @@ describe 'moves', ->
       expect(has_liberties(stone, board)).toBeFalsy()
 
   describe 'capturing stones', ->
+    capture_move = null
     describe 'simple capture', ->
       beforeEach ->
-        capture_board = captured_one_stone_board()
+        capture_board = create_one_capture_board()
+        capture_move = capture_one_stone_move()
+        play_stone(capture_move, capture_board)
 
       it 'handles a simple capture and clears out the captured stone', ->
         expect(get_color(1, 1, capture_board)).toEqual EMPTY
 
-      it 'increases the prisoner count of the capturerer', ->
-        expect(capture_board.prisoners[BLACK]).toEqual(1)
+      it 'saves the captures on the move', ->
+        expect(capture_move.captures.length).toEqual(1)
 
     describe '2 captures', ->
       beforeEach ->
-        capture_board = captured_2_stones_board()
+        capture_board = create_2_capture_board()
+        capture_move = capture_2_stones_move()
+        play_stone(capture_move, capture_board)
 
       it 'cleans up the two captured stones', ->
         expect(get_color(1, 1, capture_board)).toEqual EMPTY
         expect(get_color(2, 1, capture_board)).toEqual EMPTY
 
 
-      it 'increases the prisoner count of the capturerer by 2', ->
-        expect(capture_board.prisoners[BLACK]).toEqual(2)
+      it 'increases the captures of the capture move', ->
+        expect(capture_move.captures.length).toEqual(2)
 
   describe 'capturing_stones_with', ->
     capture_board = null

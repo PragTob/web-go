@@ -9,12 +9,6 @@ describe 'Board', ->
     it 'is initialized with an empty moves array', ->
       expect(board.moves).toEqual []
 
-    it 'is initialized with 0 black prisoners', ->
-      expect(board.prisoners[BLACK]).toEqual(0)
-
-    it 'is initialized with 0 white prisoners', ->
-      expect(board.prisoners[WHITE]).toEqual(0)
-
   describe 'is_empty', ->
     it 'returns true for an empty Array', ->
       expect(is_empty([])).toBeTruthy()
@@ -62,13 +56,6 @@ describe 'Board', ->
       board.moves.push move
       copy = copy_board(board)
       expect(copy.moves).toEqual board.moves
-
-    it 'copies the prisoners property over', ->
-      board.prisoners[BLACK] = 4
-      board.prisoners[WHITE] = 7
-      copy = copy_board(board)
-      expect(copy.prisoners[BLACK]).toEqual board.prisoners[BLACK]
-      expect(copy.prisoners[WHITE]).toEqual board.prisoners[WHITE]
 
     it 'does not alter the original', ->
       copy = copy_board(board)

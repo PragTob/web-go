@@ -114,7 +114,6 @@ capture_stones_with = (stone, board)->
   take_captures = (stone, board, captive_color, captures = [])->
     if stone.color == captive_color
       remove_stone(stone, board)
-      increase_prisoner_count(board, captive_color)
       captures.push stone
       neighbours = neighbouring_stones(stone.x, stone.y, board)
       _.each neighbours, (stone)->
@@ -124,11 +123,6 @@ capture_stones_with = (stone, board)->
   remove_stone = (stone, board) ->
     empty_move = create_stone(stone.x, stone.y, EMPTY)
     set_move(empty_move, board)
-
-  increase_prisoner_count = (board, captive_color)->
-    own_color = other_color(captive_color)
-    board.prisoners[own_color] += 1
-
 
   enemy_color = other_color(stone.color)
   captures = []

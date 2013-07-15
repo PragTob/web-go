@@ -11,9 +11,6 @@ initBoard = (size)->
     for j in [0...size]
       board[i][j] = EMPTY
   board.moves = []
-  board.prisoners = {}
-  board.prisoners[BLACK] = 0
-  board.prisoners[WHITE] = 0
   board
 
 copy_board = (board)->
@@ -24,15 +21,8 @@ copy_board = (board)->
       copy.push array[i].slice(0)
     copy
 
-  copy_prisoners = (prisoners)->
-    copied_prisoners = {}
-    copied_prisoners[BLACK] = prisoners[BLACK]
-    copied_prisoners[WHITE] = prisoners[WHITE]
-    copied_prisoners
-
   copy = deep_copy_2_dimensional_array(board)
   copy.moves = board.moves.slice(0)
-  copy.prisoners = copy_prisoners(board.prisoners)
   copy
 
 
