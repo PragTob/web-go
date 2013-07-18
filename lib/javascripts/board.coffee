@@ -3,11 +3,20 @@ WHITE = -1
 EMPTY = undefined
 NEUTRAL = 2
 VISITED = true
+NEUTRAL_SPACE_MODIFIER = 2
 
 initBoard = (size)->
+  size = size + NEUTRAL_SPACE_MODIFIER
   board = new Array size
   for i in [0...size]
-    board[i] = new Array size
+    array = new Array size
+    array[0] = NEUTRAL
+    array[array.length - 1] = NEUTRAL
+    board[i] = array
+  for i in [1...size - 1]
+    board[0][i] = NEUTRAL
+    board[board.length - 1][i] = NEUTRAL
+  board.length = size - 2
   board.moves = []
   board
 
@@ -25,25 +34,16 @@ copy_board = (board)->
 
 
 set_move = (move, board)->
-  unless is_pass_move(move) or is_out_of_bounds move.x, move.y, board
-    set_stone(move, board)
+  set_stone(move, board) unless is_pass_move(move)
 
-set_stone = (stone, board)-> board[stone.y][stone.x] = stone.color
+
+set_stone = (stone, board)-> board[stone.y + 1][stone.x + 1] = stone.color
 
 is_empty = (collection)-> collection.length == 0
 
-is_out_of_bounds = (x, y, board) ->
-  board_size = board.length # assumes an always quadratic board
-  if (x < 0) or (y < 0) or (x >= board_size) or (y >= board_size)
-    true
-  else
-    false
-
 get_color = (x, y, board)->
-  if is_out_of_bounds(x, y, board)
-    NEUTRAL
-  else
-    board[y][x]
+  console.log board
+  board[y + 1][x + 1]
 
 get_stone = (x, y, board)->
   x: x
@@ -80,6 +80,7 @@ SIGN_MAPPING = {}
 SIGN_MAPPING[BLACK] = "X"
 SIGN_MAPPING[WHITE] = "O"
 SIGN_MAPPING[EMPTY] = "-"
+SIGN_MAPPING[NEUTRAL] = '_'
 
 BACK_MAPPING = {}
 BACK_MAPPING["X"] = BLACK
