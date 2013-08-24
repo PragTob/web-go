@@ -1,6 +1,7 @@
 tmp
 
 lib/**/*.js
+lib/javascripts/**/*.js
 spec/javascripts/*.js
 ui/javascripts/*.js
 benchmark/**/*.js
