@@ -12,7 +12,7 @@ generate_random_move_for = (board)->
     else
       create_pass_move(color)
 
-  size = board.length
+  size = board.size
   maximum_tries = get_maximum_tries(size)
   color = determine_move_color(board)
   tries = 0

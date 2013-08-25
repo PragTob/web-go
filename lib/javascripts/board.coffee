@@ -16,8 +16,8 @@ initBoard = (size)->
   for i in [1...size - 1]
     board[0][i] = NEUTRAL
     board[board.length - 1][i] = NEUTRAL
-  board.length = size - 2
   board.moves = []
+  board.size = size - NEUTRAL_SPACE_MODIFIER
   board
 
 copy_board = (board)->
@@ -30,6 +30,7 @@ copy_board = (board)->
 
   copy = deep_copy_2_dimensional_array(board)
   copy.moves = board.moves.slice(0)
+  copy.size = board.size
   copy
 
 
@@ -42,7 +43,6 @@ set_stone = (stone, board)-> board[stone.y + 1][stone.x + 1] = stone.color
 is_empty = (collection)-> collection.length == 0
 
 get_color = (x, y, board)->
-  console.log board
   board[y + 1][x + 1]
 
 get_stone = (x, y, board)->
@@ -72,8 +72,8 @@ get_last_move = (board)->
     null
 
 all_fields_do = (board, func)->
-  for y in [0...board.length]
-    for x in [0...board.length]
+  for y in [0...board.size]
+    for x in [0...board.size]
       func(x, y, get_color(x,y, board))
 
 SIGN_MAPPING = {}
@@ -92,8 +92,8 @@ print_board = (board)->
     SIGN_MAPPING[color]
 
   result = ""
-  for y in [0...board.length]
-    for x in [0...board.length]
+  for y in [0...board.size]
+    for x in [0...board.size]
       result += sign_for_color(get_color(x, y, board))
     result += "\n"
 

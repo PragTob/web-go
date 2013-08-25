@@ -53,7 +53,7 @@ has_liberties = (stone, board)->
     _.any unvisited_neighbours, (stone)->
       is_liberty(stone, board, visited_map, color)
 
-  visited_map = initBoard(board.length)
+  visited_map = initBoard(board.size)
   visit stone, visited_map
   search_for_liberties(stone.x, stone.y, board, visited_map, stone.color)
 
@@ -147,7 +147,7 @@ is_eye = (move, board)->
 
   is_edge_move = (move, board)->
     move.x == 0 or move.y == 0 or
-    move.x == (board.length - 1) or move.y == (board.length - 1)
+    move.x == (board.size - 1) or move.y == (board.size - 1)
 
   get_enemy_diagonals_count = (move, board)->
     diagonal_stones = diagonal_stone_colors(move, board)
