@@ -1,4 +1,8 @@
 web-go[![Build Status](https://travis-ci.org/PragTob/web-go.png?branch=master)](https://travis-ci.org/PragTob/web-go)
 ======
 
-A Go AI running purley on clientside of the web with web workers. Trying to be a hand-in for Mozilla Dev Derby.
+A Go AI running purley on clientside of the web with web workers.
+
+## State
+This works in its first iteration, however the web workers are not in yet and it still is pretty slow. And the UI isn't that beautiful. But you can play - jay!
+However before a public release I'm still gonna get that done. So come back here!
