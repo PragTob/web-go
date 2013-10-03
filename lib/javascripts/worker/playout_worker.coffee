@@ -9,5 +9,5 @@ self.onmessage = (message)->
   board = node.board
   own_color = message.data.own_color
   finished_board = playout_for_board(board)
-  have_won = score_game(finished_board).winner == own_color
-  self.postMessage {node: node, have_won: have_won}
+  has_won = score_game(finished_board).winner == own_color
+  self.postMessage {node_id: node.id, has_won: has_won}

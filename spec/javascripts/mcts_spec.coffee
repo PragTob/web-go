@@ -45,6 +45,9 @@ describe 'Monte Carlo tree search', ->
         child = expand(root_node)
         expect(child.parent).toBe root_node
 
+      it 's parent is null', ->
+        expect(root_node.parent).toBe null
+
   describe 'UCT', ->
 
     it 'correctly calculates the UCT value for a node', ->
