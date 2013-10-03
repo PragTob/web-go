@@ -6,13 +6,14 @@ importScripts '../../../vendor/javascripts/underscore.js',
 
 NUM_WORKERS = 4
 
-max_playouts = null
-board = null
-root = null
-own_color = null
-current_node_id = 0
-current_nodes = []
-current_playouts = 0
+max_playouts     = null
+board            = null
+root             = null
+own_color        = null
+sent_result      = null
+current_node_id  = null
+current_nodes    = null
+current_playouts = null
 
 initMcts = (board)->
   root             = create_root(board)
@@ -52,12 +53,17 @@ giveWorkerWork = (worker)->
     current_nodes.push new_child
     worker.postMessage {node: new_child, own_color: own_color}
   else
-    best_node = select_best_node root
-    self.postMessage {type: 'result', move: best_node.move }
+    unless sent_result
+      best_node = select_best_node root
+      self.postMessage {type: 'result', move: best_node.move }
+      sent_result = true
 
 self.onmessage = (message)->
-  max_playouts = message.data.max_playouts
-  board        = message.data.board
+  max_playouts     = message.data.max_playouts
+  board            = message.data.board
+  sent_result      = false
+  current_nodes    = []
+  current_node_id  = 0
+  current_playouts = 0
   initMcts(board)
   initWorker() for i in [0..NUM_WORKERS]
-  self.postMessage('got your message!')

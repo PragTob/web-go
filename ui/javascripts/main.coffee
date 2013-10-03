@@ -37,8 +37,8 @@ scaleBoardTo = (number)->
   numberIntersections()
 
 start_mcts = (board)->
-  console.log board
-  worker.postMessage(board: board, max_playouts: 10)
+  console.log print_board(board)
+  worker.postMessage(board: board, max_playouts: 100)
 
 set_move_on_ui_board = (move)->
   $target_cell = $("table.go-board tr:nth-child(#{move.y + 1}) td:nth-child(#{move.x + 1})")
@@ -73,7 +73,7 @@ $ ->
     if message.type == 'Error'
       console.log message.data.message
     else
-      if message.type == 'result'
+      if message.data.type == 'result'
         move = message.data.move
         play_stone(move, board)
         set_move_on_ui_board(move)
