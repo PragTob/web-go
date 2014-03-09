@@ -33,7 +33,12 @@ describe 'random_move_generation', ->
 
   it 'can generate a random move on the first line', ->
     board = small_first_line_board()
+    old_max_try = MAXIMUM_TRY_MODIFICATOR
+    # minimize chances of falsely creating a pass move
+    # (false in the context of this spec)
+    MAXIMUM_TRY_MODIFICATOR = 200
     move = generate_random_move_for(board)
+    MAXIMUM_TRY_MODIFICATOR = old_max_try
     expect(move).toEqual create_stone(0, 0, BLACK)
 
 finished_tiny_game = ->

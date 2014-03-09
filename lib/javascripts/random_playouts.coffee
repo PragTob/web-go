@@ -1,10 +1,11 @@
 KOMI = 6.5
+MAXIMUM_TRY_MODIFICATOR = 2
 
 generate_random_move_for = (board)->
 
   random_coordinate = (size)-> Math.floor(Math.random() * size)
 
-  get_maximum_tries = (size)-> 2 * size * size
+  get_maximum_tries = (size)-> MAXIMUM_TRY_MODIFICATOR * size * size
 
   create_ramdom_move = (size, color, tries, maximum_tries)->
     if tries <= maximum_tries
