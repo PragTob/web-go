@@ -214,11 +214,11 @@ describe 'Board', ->
       expect(get_last_move(board)).toBeNull()
 
   describe 'all_fields_do', ->
-    spie = null
+    call_count = null
 
     verify_calls_to_color = (stone_color, number)->
-      all_fields_do(board, (x, y, color)-> spie() if color == stone_color)
-      expect(spie.calls.length).toEqual number
+      all_fields_do(board, (x, y, color)-> call_count++ if color == stone_color)
+      expect(call_count).toEqual number
 
     all_fields_board = ->
       board_string = """
@@ -230,11 +230,11 @@ describe 'Board', ->
 
     beforeEach ->
       board = all_fields_board()
-      spie = jasmine.createSpy('blubb')
+      call_count = 0
 
     it 'calls the function for every field', ->
-      all_fields_do(board, -> spie())
-      expect(spie.calls.length).toEqual 9
+      all_fields_do(board, -> call_count++)
+      expect(call_count).toEqual 9
 
     it 'has all the black stones', ->
       verify_calls_to_color(BLACK, 4)
