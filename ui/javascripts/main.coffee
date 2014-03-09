@@ -4,7 +4,7 @@ COLOR_TO_CLASS[BLACK] = 'black'
 COLOR_TO_CLASS[WHITE] = 'white'
 
 board = null
-worker = null
+mcts_worker = null
 
 scaleBoardTo = (number)->
   stretchRowsTo = (number)->
@@ -38,7 +38,7 @@ scaleBoardTo = (number)->
 
 start_mcts = (board)->
   console.log print_board(board)
-  worker.postMessage(board: board, max_playouts: 100)
+  mcts_worker.postMessage(board: board, max_playouts: 100)
 
 set_move_on_ui_board = (move)->
   $target_cell = $("table.go-board tr:nth-child(#{move.y + 1}) td:nth-child(#{move.x + 1})")
@@ -68,8 +68,8 @@ $ ->
   board = initBoard(board_size)
   console.log board
 
-  worker = new Worker 'lib/javascripts/worker/tree_worker.js'
-  worker.addEventListener 'message', (message)->
+  mcts_worker = new Worker 'lib/javascripts/worker/tree_worker.js'
+  mcts_worker.addEventListener 'message', (message)->
     if message.type == 'Error'
       console.log message.data.message
     else
@@ -80,7 +80,7 @@ $ ->
       else
         console.log message.data
 
-  worker.addEventListener('error', (message)->
+  mcts_worker.addEventListener('error', (message)->
     console.log 'Worker error message:' + message.data)
 
   $('.go-board td').click ->
