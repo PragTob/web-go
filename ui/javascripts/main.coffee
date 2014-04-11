@@ -38,8 +38,6 @@ start_mcts = (board)->
   play_stone(move, board)
   set_move_on_ui_board(move)
 
-
-
 set_move_on_ui_board = (move)->
   $target_cell = $("table.go-board tr:nth-child(#{move.y + 1}) td:nth-child(#{move.x + 1})")
   stone = $(GO_STONE)
@@ -47,7 +45,9 @@ set_move_on_ui_board = (move)->
   $target_cell.append(stone)
 
 create_move_from_ui_move = ($td, color)->
-  create_stone($td.attr('data-x'), $td.attr('data-y'), color)
+  create_stone(($td.data('x')),
+               ($td.data('y')),
+               color)
 
 $ ->
   current_color = BLACK
