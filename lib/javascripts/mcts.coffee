@@ -1,5 +1,5 @@
 UCT_BIAS_FACTOR = 2
-DEFAULt_PLAYOUTS = 100
+DEFAULT_PLAYOUTS = 100
 
 create_node = (board, move, parent)->
   node =
@@ -76,7 +76,7 @@ select_best_node = (node)->
 
   best_node
 
-mcts = (board, playouts = DEFAULt_PLAYOUTS)->
+mcts = (board, playouts = DEFAULT_PLAYOUTS)->
 
   explore_tree = (root, own_color)->
     selected_node = select(root)

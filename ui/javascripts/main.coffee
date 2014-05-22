@@ -34,9 +34,10 @@ scaleBoardTo = (number)->
   numberIntersections()
 
 start_mcts = (board)->
-  move = mcts(board, 1000)
+  move = mcts(board, 100)
   play_stone(move, board)
   set_move_on_ui_board(move)
+  print_board board
 
 set_move_on_ui_board = (move)->
   $target_cell = $("table.go-board tr:nth-child(#{move.y + 1}) td:nth-child(#{move.x + 1})")
@@ -56,14 +57,11 @@ $ ->
   board = initBoard(board_size)
 
   $('.go-board td').click ->
-    if $(this).is(':empty')
-      stone = $(GO_STONE)
-      if current_color == BLACK
-        stone.addClass('black')
+    if $(this).is(':empty') && current_color == BLACK
         move = create_move_from_ui_move($(this), current_color)
+        set_move_on_ui_board(move)
         play_stone(move, board)
         current_color = WHITE
         start_mcts(board)
         current_color = BLACK
 
-      $(this).append(stone)
