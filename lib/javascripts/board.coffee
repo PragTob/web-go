@@ -96,7 +96,7 @@ print_board = (board)->
       result += sign_for_color(get_color(x, y, board))
     result += "\n"
 
-  console.log result[0..-2] #remove last \n
+  result[0..-2] #remove last \n
 
 board_from_string = (string)->
 
