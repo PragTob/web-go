@@ -15,3 +15,7 @@ coffee -w -c --bare .
 ```
 
 This should work with newer CoffeeScript versions.
+
+## Specs
+
+`rake jasmine` to view in the browser. `rake jasmine:ci` to run on the console and CI system :)
