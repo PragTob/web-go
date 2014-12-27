@@ -7,7 +7,7 @@ scaleBoardTo = (number)->
   stretchRowsTo = (number)->
     line = $('table.go-board tr:nth-child(2)')
     duplicate = line.clone()
-    for i in [1..number - 3]
+    for i in [1..(number - 3)]
       line.after duplicate
       line = duplicate
       duplicate = line.clone()
@@ -17,7 +17,7 @@ scaleBoardTo = (number)->
       cell = $(row).find(':nth-child(2)')
       duplicate = cell.clone()
 
-      for i in [1..number - 3]
+      for i in [1..(number - 3)]
         cell.after duplicate
         cell = duplicate
         duplicate = cell.clone()
