@@ -7,4 +7,4 @@ before_script:
 script: 'DISPLAY=:99.0 rake jasmine:ci'
 
 rvm:
-  - '2.0'
+  - '2.2'
