@@ -23,7 +23,7 @@ initMcts = (board)->
   current_node_id++
 
 initWorker = ->
-  worker = new Worker('playout_worker.js')
+  worker = new Worker 'playout_worker.js'
   worker.addEventListener('message', handleWorkerAnswer)
   worker.addEventListener('error', (message)->
     self.post({type: 'Error', message: 'Error ' + message.data}))
@@ -45,6 +45,9 @@ findNode = (node_id)->
       return node
 
 giveWorkerWork = (worker)->
+  if current_playouts % 10 == 0
+    console.log current_playouts
+    console.log max_playouts
   if current_playouts < max_playouts
     selected_node = select(root)
     new_child     = expand(selected_node)
@@ -54,6 +57,7 @@ giveWorkerWork = (worker)->
     worker.postMessage {node: new_child, own_color: own_color}
   else
     unless sent_result
+      console.log 'sent result'
       best_node = select_best_node root
       self.postMessage {type: 'result', move: best_node.move }
       sent_result = true

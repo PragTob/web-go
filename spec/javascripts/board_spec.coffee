@@ -146,11 +146,11 @@ describe 'Board', ->
                     O--
                     """
 
-    describe 'print_board', ->
+    describe 'board_to_string', ->
       it 'prints a beautiful board', ->
         set_move(create_stone(1, 0, BLACK), board)
         set_move(create_stone(0, 2, WHITE), board)
-        expect(print_board(board)).toEqual board_string
+        expect(board_to_string(board)).toEqual board_string
 
 
     describe 'board_from_string', ->

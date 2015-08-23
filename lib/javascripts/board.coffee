@@ -86,7 +86,7 @@ BACK_MAPPING["X"] = BLACK
 BACK_MAPPING["O"] = WHITE
 BACK_MAPPING["-"] = EMPTY
 
-print_board = (board)->
+board_to_string = (board)->
   sign_for_color = (color)->
     SIGN_MAPPING[color]
 

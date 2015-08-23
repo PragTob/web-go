@@ -37,8 +37,8 @@ scaleBoardTo = (number)->
   numberIntersections()
 
 start_mcts = (board)->
-  console.log print_board(board)
-  mcts_worker.postMessage(board: board, max_playouts: 100)
+  console.log board_to_string(board)
+  mcts_worker.postMessage(board: board, max_playouts: 300)
 
 set_move_on_ui_board = (move)->
   $target_cell = $("table.go-board tr:nth-child(#{move.y + 1}) td:nth-child(#{move.x + 1})")
@@ -66,7 +66,7 @@ $ ->
   board_size = 9
   scaleBoardTo(board_size)
   board = initBoard(board_size)
-  console.log board
+  console.log board_to_string(board)
 
   mcts_worker = new Worker 'lib/javascripts/worker/tree_worker.js'
   mcts_worker.addEventListener 'message', (message)->
