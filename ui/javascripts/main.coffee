@@ -34,7 +34,7 @@ scaleBoardTo = (number)->
   numberIntersections()
 
 start_mcts = (board)->
-  move = mcts(board, 100)
+  move = mcts(board)
   play_stone(move, board)
   set_move_on_ui_board(move)
 

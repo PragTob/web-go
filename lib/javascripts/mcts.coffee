@@ -1,5 +1,5 @@
 UCT_BIAS_FACTOR = 2
-DEFAULT_PLAYOUTS = 100
+DEFAULT_PLAYOUTS = 1000
 
 create_node = (board, move, parent)->
   node =
