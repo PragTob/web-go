@@ -5,9 +5,6 @@ before_install:
 before_script:
   - 'npm install coffee-script'
   - 'sh compile-all.sh'
-  - "bundle update" # recommended for usage with caching without Gemfile.lock
 script: 'bundle exec rake jasmine:ci'
-sudo: false
-cache: bundler
 rvm:
   - '2.2'
