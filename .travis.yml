@@ -5,6 +5,8 @@ before_install:
 before_script:
   - 'npm install coffee-script'
   - 'sh compile-all.sh'
+  - bundle update
 script: 'bundle exec rake jasmine:ci'
+cache: bundler
 rvm:
   - '2.2'
