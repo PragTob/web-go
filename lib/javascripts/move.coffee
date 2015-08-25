@@ -83,7 +83,7 @@ is_valid_move = (stone, board) ->
     last_move_and_current_move_captured_exactly_one = (captures, last_move) ->
       captures.length == 1 && last_move.captures.length == 1
 
-    is_first_move = (board)-> board.moves.length == 0
+    isFirstOrSecondMove = (board)-> board.moves.length <= 1
 
     captures_of_move = (move, board)->
       copied_board = copy_board(board)
@@ -91,11 +91,12 @@ is_valid_move = (stone, board) ->
       capture_stones_with(stone, copied_board)
 
 
-    return true if is_first_move(board)
+    return true if isFirstOrSecondMove(board)
     last_move = get_last_move(board)
+    return true if last_move.captures.length != 1
     captures = captures_of_move(stone, board)
-    not (last_move_and_current_move_captured_exactly_one(captures, last_move) and
-    is_same_move(last_move.captures[0], move))
+    not (is_same_move(last_move.captures[0], move) and
+      last_move_and_current_move_captured_exactly_one(captures, last_move))
 
 
   is_no_double_move(stone, board) and

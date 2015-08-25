@@ -40,11 +40,14 @@ describe 'moves', ->
   create_ko_board = ->
     string = """
              -XO-
-             X-XO
+             --XO
              -XO-
              ----
              """
-    board_from_string(string)
+    board = board_from_string(string)
+    stone = create_stone(0, 1, BLACK)
+    play_stone(stone, board)
+    board
 
   beforeEach ->
     board = initBoard(3)
