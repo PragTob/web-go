@@ -2,7 +2,7 @@ GO_STONE = "<div class='go-stone'></div>"
 COLOR_TO_CLASS = {}
 COLOR_TO_CLASS[BLACK] = 'black'
 COLOR_TO_CLASS[WHITE] = 'white'
-MAX_PLAYOUTS = 300
+MAX_PLAYOUTS = 1000
 NUM_WORKERS = 4
 
 board = null
