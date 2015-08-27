@@ -80,9 +80,6 @@ is_valid_move = (stone, board) ->
 
   is_no_illegal_ko_move = (move, board, captures)->
 
-    last_move_and_current_move_captured_exactly_one = (captures, last_move) ->
-      captures.length == 1 && last_move.captures.length == 1
-
     isFirstOrSecondMove = (board)-> board.moves.length <= 1
 
     captures_of_move = (move, board)->
@@ -95,8 +92,9 @@ is_valid_move = (stone, board) ->
     last_move = get_last_move(board)
     return true if last_move.captures.length != 1
     captures = captures_of_move(stone, board)
+    return true if captures.length != 1
     not (is_same_move(last_move.captures[0], move) and
-      last_move_and_current_move_captured_exactly_one(captures, last_move))
+      is_same_move(captures[0], last_move))
 
 
   is_no_double_move(stone, board) and
