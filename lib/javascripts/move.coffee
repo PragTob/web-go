@@ -53,6 +53,9 @@ has_liberties = (stone, board)->
     _.any unvisited_neighbours, (stone)->
       is_liberty(stone, board, visited_map, color)
 
+  direct_liberty = _.any neighbouring_stones(stone.x, stone.y, board), (stone)->
+    stone.color == EMPTY
+  return true if direct_liberty
   visited_map = initBoard(board.length)
   visit stone, visited_map
   search_for_liberties(stone.x, stone.y, board, visited_map, stone.color)
