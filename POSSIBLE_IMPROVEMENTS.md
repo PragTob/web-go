@@ -10,6 +10,8 @@ More efficient playouts means more playouts, means more data, means better moves
 * don't let play_stone recheck the validity of a move, assume it is valid
 * stop the simulation at an earlier point (before putting all stones on the field)
 * have a virtually extended board where fields that are not in the field are `NEUTRAL` to avoid range checks.
+* lazy operations (Iterator/Enumerator like) when possible, such as finding a neighboring friendly stone
+* make neighbour stones methods not create separate arrays (add them straight to it)
 
 ## Algorithmic
 MCTS improvements & co.

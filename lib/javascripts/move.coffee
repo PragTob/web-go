@@ -5,12 +5,40 @@ create_stone = (x, y, color)->
 
 create_pass_move = (color)-> create_stone(null, null, color)
 
+# assumes that the move is valid (doesn't bother checking)
+makeValidMove = (stone, board) ->
+  set_move(stone, board)
+  assignGroup(stone, board)
+  captures = capture_stones_with(stone, board)
+  stone.captures = captures
+  board.moves.push stone
+
+
+assignGroup = (stone, board) ->
+
+  countLiberties = (neighboursByColor)->
+    _.inject neighboursByColor[EMPTY], ((memo, stone)-> memo + 1), 0
+
+  neighbours = neighbouring_stones(stone.x, stone.y, board)
+  neighboursByColor = _.groupBy neighbours, (neighbour)->
+    neighbour.color
+
+  liberties = countLiberties(neighboursByColor)
+  _.each neighboursByColor[stone.color], (friendlyStone)->
+    joinGroup(friendlyStone.group, stone)
+
+  _.each neighboursByColor[other_color(stone.color)], (enemyStone)->
+    # unique group liberty - 1
+    # when group is taken off the board, liberties need to be readded to other group
+    # maybe it needs to have a neighboring group property together with how many liberties it takes up of them
+
+
+countLiberties = (stone, board)->
+  emptyNeighbours(stone, board).length
+
 play_stone = (stone, board) ->
   if is_valid_move(stone, board)
-    set_move(stone, board)
-    captures = capture_stones_with(stone, board)
-    stone.captures = captures
-    board.moves.push stone
+    makeValidMove(stone, board)
   else
     throw "Illegal move Exception!"
 
