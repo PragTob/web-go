@@ -14,24 +14,65 @@ makeValidMove = (stone, board) ->
   board.moves.push stone
 
 
+stoneToLibertyString = (x, y) ->
+  "#{x}-#{y}"
+
+groupLibertyAt = (group, x, y)->
+  group.liberties[stoneToLibertyString(x, y)]
+
 assignGroup = (stone, board) ->
 
-  countLiberties = (neighboursByColor)->
-    _.inject neighboursByColor[EMPTY], ((memo, stone)-> memo + 1), 0
+  joinGroup = (group, stone)->
+
+    addStoneToGroup = (group, stone)->
+      stone.group = group
+      group.stones << stone
+
+    removeLibertyOfNewMember = (group, stone)->
+      delete groupLibertyAt(group, stone.x, stone.y)
+      group.libertyCount -= 1
+
+    addStoneToGroup(group, stone)
+    removeLibertyOfNewMember(group, stone)
+
+
+  sameGroup = (stone, otherStone)->
+    stone.group == otherStone.group # does this check object identity or equalness?
+
+  createNewGroup = (stone)->
+    group =
+      stones: [stone]
+      liberties: {}
+      libertyCount: 0
+
+  addToGroupLibertes(group, liberty)->
+    identifier = stoneToLibertyString(liberty)
+    unless group[identifier]?
+      group[identifier] = EMPTY
+      group.libertyCount += 1
 
   neighbours = neighbouring_stones(stone.x, stone.y, board)
   neighboursByColor = _.groupBy neighbours, (neighbour)->
     neighbour.color
 
-  liberties = countLiberties(neighboursByColor)
   _.each neighboursByColor[stone.color], (friendlyStone)->
-    joinGroup(friendlyStone.group, stone)
+    joinGroup(friendlyStone.group, stone) unless sameGroup(stone, friendlyStone)
+
+  createNewGroup(stone) unless stone.group
+
+  _.each neighboursByColor(EMPTY), (liberty)->
+    addToGroupLiberties(stone.group, liberty)
 
   _.each neighboursByColor[other_color(stone.color)], (enemyStone)->
-    # unique group liberty - 1
-    # when group is taken off the board, liberties need to be readded to other group
-    # maybe it needs to have a neighboring group property together with how many liberties it takes up of them
+    enemyGroup = enemyStone.group
+    identifier = stoneToLibertyString(stone)
+    if enemyGroup.liberties[identifier]
+      delete liberties[identifier]
+      enemyGroup.libertiesCount -= 1
 
+  # when a group is taken from the board we have to iterate over all board
+  # board positions and see if any of them has a neighboring enemy stone, whose
+  # group would then get a liberty added
 
 countLiberties = (stone, board)->
   emptyNeighbours(stone, board).length
@@ -76,7 +117,7 @@ has_liberties = (stone, board)->
     neighbours = neighbouring_stones(x, y, board)
     unvisited_neighbours = _.reject neighbours, (stone)->
       is_visited(stone, visited_map)
-      
+
     _.each unvisited_neighbours, (stone)-> visit(stone, visited_map)
     _.any unvisited_neighbours, (stone)->
       is_liberty(stone, board, visited_map, color)

@@ -4,6 +4,7 @@ Possible improvements that could be applied to the bot.
 
 ## More efficient playouts
 More efficient playouts means more playouts, means more data, means better moves being chosen hopefully.
+A lot of these are hypothetical and running the benchmark will show if they are really worth it.
 
 * have groups concept that counts liberties of groups as they are played --> faster detection for captures etc. (no more board copies)
 * keep a list of valid moves to easily pick from
@@ -12,6 +13,9 @@ More efficient playouts means more playouts, means more data, means better moves
 * have a virtually extended board where fields that are not in the field are `NEUTRAL` to avoid range checks.
 * lazy operations (Iterator/Enumerator like) when possible, such as finding a neighboring friendly stone
 * make neighbour stones methods not create separate arrays (add them straight to it)
+* Avoid creating stone objects all of the time (`get_stone` function)
+  * put actual stone objects on the board to be returned (becomes more viable once we don't copy the damn board anymore)
+  * just pass around x, y and the color all the time (ewwwwwwww)
 
 ## Algorithmic
 MCTS improvements & co.
