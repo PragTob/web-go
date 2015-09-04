@@ -190,12 +190,13 @@ describe 'Board', ->
     call_count = null
 
     verify_calls_to_color = (stone_color, number)->
-      all_fields_do(board, (x, y, color)-> call_count++ if color == stone_color)
+      all_fields_do(board, (x, y, color)->
+        call_count++ if color == stone_color)
       expect(call_count).toEqual number
 
     all_fields_board = ->
       board_string = """
-                     XO-
+                     -OX
                      XO-
                      XXO
                      """

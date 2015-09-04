@@ -73,7 +73,9 @@ get_last_move = (board)->
 all_fields_do = (board, func)->
   for y in [0...board.length]
     for x in [0...board.length]
-      func(x, y, get_color(x,y, board))
+      stone = get_stone(x, y, board)
+      # hand around the stone object? TODO
+      func(stone.x, stone.y, stone.color)
 
 SIGN_MAPPING = {}
 SIGN_MAPPING[BLACK] = "X"

@@ -43,9 +43,7 @@ assignGroup = (stone, board) ->
   neighboursByColor = _.groupBy neighbours, (neighbour)->
     neighbour.color
 
-  console.log stone.color
   _.each neighboursByColor[stone.color], (friendlyStone)->
-    console.log friendlyStone
     joinGroup(friendlyStone.group, stone) unless sameGroup(stone, friendlyStone)
 
   createNewGroup(stone) unless stone.group

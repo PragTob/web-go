@@ -7,8 +7,7 @@ create_pass_move = (color)-> create_stone(null, null, color)
 
 # assumes that the move is valid (doesn't bother checking)
 makeValidMove = (stone, board) ->
-  set_move(stone, board)
-  console.log "Making move in color: #{stone.color}"
+  set_stone(stone, board)
   assignGroup(stone, board)
   captures = capture_stones_with(stone, board)
   stone.captures = captures
