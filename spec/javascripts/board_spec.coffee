@@ -166,13 +166,15 @@ describe 'Board', ->
       it 'also assigns the stones their groups (black stone)', ->
         blackStone = get_stone(1, 0, board)
         blackGroup = blackStone.group
-        expect(blackGroup.libertyCount).toBe 1
+        expect(blackGroup.libertyCount).toBe 3
+        expect(blackGroup.stones.length).toBe 1
         expect(blackGroup.stones[0]).toBe blackStone
 
       it 'also assigns the stones their groups (white stone)', ->
         whiteStone = get_stone(0, 2, board)
         whiteGroup = whiteStone.group
-        expect(whiteGroup.libertyCount).toBe 1
+        expect(whiteGroup.libertyCount).toBe 2
+        expect(whiteGroup.stones.length).toBe 1
         expect(whiteGroup.stones[0]).toBe whiteStone
 
   describe 'get_last_move', ->
