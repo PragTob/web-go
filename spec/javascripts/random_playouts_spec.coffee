@@ -1,3 +1,7 @@
+forceNextMoveToBe = (color, board)->
+  oppositeColor = other_color(color)
+  board.moves.push create_pass_move(oppositeColor)
+
 describe 'random_move_generation', ->
   board = null
 
@@ -33,6 +37,7 @@ describe 'random_move_generation', ->
 
   it 'can generate a random move on the first line', ->
     board = small_first_line_board()
+    forceNextMoveToBe(BLACK, board)
     old_max_try = MAXIMUM_TRY_MODIFICATOR
     # minimize chances of falsely creating a pass move
     # (false in the context of this spec)
@@ -103,9 +108,9 @@ describe 'get_all_plausible_moves', ->
     beforeEach -> board = tiny_game()
 
     it 'finds the right number of black moves', ->
-      board.moves.push create_pass_move(WHITE)
+      forceNextMoveToBe(BLACK, board)
       expect(get_all_plausible_moves(board).length).toEqual 5
 
     it 'finds the right number of white moves', ->
-      board.moves.push create_pass_move(BLACK)
+      forceNextMoveToBe(WHITE, board)
       expect(get_all_plausible_moves(board).length).toEqual 4
