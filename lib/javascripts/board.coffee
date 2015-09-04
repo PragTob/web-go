@@ -1,6 +1,6 @@
 BLACK = 1
 WHITE = -1
-EMPTY = undefined
+EMPTY = 0
 NEUTRAL = 2
 VISITED = true
 

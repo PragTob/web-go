@@ -35,8 +35,8 @@ assignGroup = (stone, board) ->
 
   addToGroupLiberties = (group, liberty)->
     identifier = stoneToLibertyString(liberty)
-    unless group[identifier]?
-      group[identifier] = EMPTY
+    unless group.liberties[identifier]?
+      group.liberties[identifier] = EMPTY
       group.libertyCount += 1
 
   neighbours = neighbouring_stones(stone.x, stone.y, board)
@@ -54,9 +54,12 @@ assignGroup = (stone, board) ->
   _.each neighboursByColor[other_color(stone.color)], (enemyStone)->
     enemyGroup = enemyStone.group
     identifier = stoneToLibertyString(stone)
-    if enemyGroup.liberties[identifier]
-      delete liberties[identifier]
-      enemyGroup.libertiesCount -= 1
+    console.log "Maybe removing #{identifier}"
+    console.log enemyGroup.liberties
+    if enemyGroup.liberties[identifier]?
+      console.log 'remooovvinnggg'
+      delete enemyGroup.liberties[identifier]
+      enemyGroup.libertyCount -= 1
 
   # when a group is taken from the board we have to iterate over all members
   # and see if any of them has a neighboring enemy stone, whose
