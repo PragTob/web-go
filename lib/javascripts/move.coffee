@@ -35,43 +35,12 @@ other_color = (color)->
   else
     BLACK
 
-has_liberties = (stone, board)->
-
-  is_visited = (stone, visited_mapping)->
-    get_color(stone.x, stone.y, visited_mapping) == VISITED
-
-  visit = (stone, visited_mapping)->
-    visited_move = create_stone(stone.x, stone.y, VISITED)
-    set_move(visited_move, visited_mapping)
-
-  is_liberty = (stone, board, visited_map, color)->
-      switch stone.color
-        when EMPTY then true
-        when NEUTRAL then false
-        when other_color(color) then false
-        when color
-          search_for_liberties  stone.x,
-                                stone.y,
-                                board,
-                                visited_map,
-                                color
-        else throw 'we should never end up here when checking for liberties'
-
-  search_for_liberties = (x, y, board, visited_map, color) ->
-    neighbours = neighbouring_stones(x, y, board)
-    unvisited_neighbours = _.reject neighbours, (stone)->
-      is_visited(stone, visited_map)
-
-    _.each unvisited_neighbours, (stone)-> visit(stone, visited_map)
-    _.any unvisited_neighbours, (stone)->
-      is_liberty(stone, board, visited_map, color)
-
-  direct_liberty = _.any neighbouring_stones(stone.x, stone.y, board), (stone)->
-    stone.color == EMPTY
-  return true if direct_liberty
-  visited_map = initBoard(board.length)
-  visit stone, visited_map
-  search_for_liberties(stone.x, stone.y, board, visited_map, stone.color)
+has_liberties = (stone)->
+  if stone.group
+    stone.group.libertyCount > 0
+  else
+    # check if there is a neighbouring empty field OR a neighboring group of
+    # the same color with 2+ liberties
 
 is_valid_move = (stone, board) ->
 
@@ -126,16 +95,29 @@ is_same_move = (move, other_move)->
 
 capture_stones_with = (stone, board)->
 
-  take_captures = (stone, board, captive_color, captures = [])->
+  take_captures = (stone, board, captive_color)->
+    captures = []
+    # prevent recapturing the same stones/group? TODO
     if stone.color == captive_color
-      remove_stone(stone, board)
+      group = stone.group
+      captures = removeGroup(group, board)
+      giveBackLiberties(group)
       captures.push stone
-      neighbours = neighbouring_stones(stone.x, stone.y, board)
-      _.each neighbours, (stone)->
-        take_captures(stone, board, captive_color, captures)
-      captures
+    captures
 
-  remove_stone = (stone, board) ->
+  giveBackLiberties = (group)->
+    # it might be ok not to delete the liberties associated with other groups
+    # as when they would need that information (because they were removed) from
+    # the board, then other groups would have taken their place
+    for key, enemyGroup of group.liberties
+      enemyGroup.libertyCount += 1
+
+  removeGroup = (group, board)->
+    _.each group.stones, (stone)->
+      removeStone(stone, board)
+    group.stones
+
+  removeStone = (stone, board)->
     empty_move = create_stone(stone.x, stone.y, EMPTY)
     set_move(empty_move, board)
 
@@ -143,7 +125,7 @@ capture_stones_with = (stone, board)->
   captures = []
   unless is_pass_move(stone)
     _.each enemy_neighbours(stone, board), (stone)->
-      unless has_liberties(stone, board)
+      unless has_liberties(stone)
         captures = captures.concat take_captures(stone, board, enemy_color)
   captures
 

@@ -81,6 +81,19 @@ describe 'groups', ->
         expect(group.libertyCount).toEqual 2
         expect(group.stones[0]).toBe stone
 
+      it "gets the liberties right for both stones", ->
+        blackStone = get_stone(1, 1, board)
+        whiteStone = get_stone(1, 0, board)
+
+        expect(blackStone.group.liberties['0-1']).toEqual EMPTY
+        expect(blackStone.group.liberties['1-2']).toEqual EMPTY
+        expect(blackStone.group.liberties['2-1']).toEqual EMPTY
+        expect(blackStone.group.liberties['1-0']).toBe whiteStone.group
+
+        expect(whiteStone.group.liberties['0-0']).toEqual EMPTY
+        expect(whiteStone.group.liberties['2-0']).toEqual EMPTY
+        expect(whiteStone.group.liberties['1-1']).toBe blackStone.group
+
     describe "before capture liberties", ->
       board = null
 
@@ -126,6 +139,7 @@ describe 'groups', ->
           makeValidMove(create_stone(3, 2, WHITE), board)
 
         it "gets the liberties of the top white grup", ->
+          console.log board_to_string(board)
           stone = get_stone(1, 1, board)
           group = stone.group
           expect(group.libertyCount).toEqual 6
