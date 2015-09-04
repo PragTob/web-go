@@ -175,50 +175,6 @@ describe 'Board', ->
         expect(whiteGroup.libertyCount).toBe 1
         expect(whiteGroup.stones[0]).toBe whiteStone
 
-  describe 'is_equal_board', ->
-    it 'is true for empty boards of the same size', ->
-      expect(is_equal_board(initBoard(3), initBoard(3))).toBeTruthy()
-
-    it 'is false for empty boards of different size', ->
-      expect(is_equal_board(initBoard(2), initBoard(3))).toBeFalsy()
-
-    it 'is falsy when one of the boards has a move played', ->
-      board = initBoard(3)
-      set_move(create_stone(1, 1, BLACK), board)
-      expect(is_equal_board(board, initBoard(3))).toBeFalsy()
-
-    it 'is true when both boards have the same move played', ->
-      board_1 = initBoard(3)
-      board_2 = initBoard(3)
-      move = create_stone(1, 1, BLACK)
-      set_move(move, board_1)
-      set_move(move, board_2)
-      expect(is_equal_board(board_1, board_2)).toBeTruthy()
-
-    describe 'with a preset board', ->
-      string = """
-               ---
-               X-O
-               -XO
-               """
-      board_1 = null
-      board_2 = null
-
-      beforeEach ->
-        board_1 = board_from_string(string)
-        board_2 = board_from_string(string)
-
-      it 'is true', ->
-        expect(is_equal_board(board_1, board_2)).toBeTruthy()
-
-      it 'is false when one board has a move applied', ->
-        set_move(create_stone(0, 0, BLACK), board_1)
-        expect(is_equal_board(board_1, board_2)).toBeFalsy()
-
-      it 'is wrong if one of the existing stones is changed', ->
-        set_move(create_stone(0, 1, WHITE), board_1)
-        expect(is_equal_board(board_1, board_2)).toBeFalsy()
-
   describe 'get_last_move', ->
     it 'returns the last move', ->
       move = create_stone(1, 2, BLACK)
