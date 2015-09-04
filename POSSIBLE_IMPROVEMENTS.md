@@ -16,6 +16,7 @@ A lot of these are hypothetical and running the benchmark will show if they are 
 * Avoid creating stone objects all of the time (`get_stone` function)
   * put actual stone objects on the board to be returned (becomes more viable once we don't copy the damn board anymore)
   * just pass around x, y and the color all the time (ewwwwwwww)
+* Better out of bounds handling for neighbouring stones etc. (just return a smaller array instead of creating fake neutral stounes)
 
 ## Algorithmic
 MCTS improvements & co.

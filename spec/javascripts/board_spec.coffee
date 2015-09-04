@@ -4,7 +4,6 @@ describe 'Board', ->
   beforeEach ->
     board = initBoard(3)
 
-
   describe 'initialization', ->
     it 'is initialized with an empty moves array', ->
       expect(board.moves).toEqual []
@@ -154,11 +153,27 @@ describe 'Board', ->
 
 
     describe 'board_from_string', ->
-      it 'takes a simple string and creates a corresponging board', ->
+      board = null
+
+      beforeEach ->
         board = board_from_string(board_string)
+
+      it 'takes a simple string and creates a corresponging board', ->
         expect(get_color(0, 0, board)).toBe EMPTY
         expect(get_color(1, 0, board)).toBe BLACK
         expect(get_color(0, 2, board)).toBe WHITE
+
+      it 'also assigns the stones their groups (black stone)', ->
+        blackStone = get_stone(1, 0, board)
+        blackGroup = blackStone.group
+        expect(blackGroup.libertyCount).toBe 1
+        expect(blackGroup.stones[0]).toBe blackStone
+
+      it 'also assigns the stones their groups (white stone)', ->
+        whiteStone = get_stone(0, 2, board)
+        whiteGroup = whiteStone.group
+        expect(whiteGroup.libertyCount).toBe 1
+        expect(whiteGroup.stones[0]).toBe whiteStone
 
   describe 'is_equal_board', ->
     it 'is true for empty boards of the same size', ->

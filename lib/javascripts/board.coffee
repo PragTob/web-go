@@ -6,8 +6,11 @@ VISITED = true
 
 initBoard = (size)->
   board = new Array size
-  for i in [0...size]
-    board[i] = new Array size
+  for y in [0...size]
+    board[y] = new Array size
+    for x in [0...size]
+      set_stone(create_stone(x, y, EMPTY), board)
+
   board.moves = []
   board
 
@@ -28,7 +31,7 @@ set_move = (move, board)->
   unless is_pass_move(move) or is_out_of_bounds move.x, move.y, board
     set_stone(move, board)
 
-set_stone = (stone, board)-> board[stone.y][stone.x] = stone.color
+set_stone = (stone, board)-> board[stone.y][stone.x] = stone
 
 is_empty = (collection)-> collection.length == 0
 
@@ -43,13 +46,13 @@ get_color = (x, y, board)->
   if is_out_of_bounds(x, y, board)
     NEUTRAL
   else
-    board[y][x]
+    get_stone(x, y, board)?.color
 
 get_stone = (x, y, board)->
-  x: x
-  y: y
-  color: get_color(x, y, board)
-
+  if is_out_of_bounds(x, y, board)
+    create_stone(x, y, NEUTRAL)
+  else
+    board[y][x]
 
 neighbouring_stones = (x, y, board)->
   [get_stone(x, y - 1, board), get_stone(x, y + 1, board),
@@ -109,6 +112,8 @@ board_from_string = (string)->
   board = initBoard(board_size)
   for y in [0...board_size]
     for x in [0...board_size]
-      set_move(create_stone(x, y, color_for_sign(lines[y][x])), board)
+      color = color_for_sign(lines[y][x])
+      if (color == WHITE) || (color == BLACK)
+        makeValidMove(create_stone(x, y, color), board)
 
   board
