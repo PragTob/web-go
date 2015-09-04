@@ -3,7 +3,11 @@ create_stone = (x, y, color)->
   y: y
   color: color
 
-create_pass_move = (color)-> create_stone(null, null, color)
+create_pass_move = (color)->
+  pass = create_stone(null, null, color)
+  pass.captures = []
+  pass
+
 
 # assumes that the move is valid (doesn't bother checking)
 makeValidMove = (stone, board) ->

@@ -103,10 +103,9 @@ describe 'get_all_plausible_moves', ->
     beforeEach -> board = tiny_game()
 
     it 'finds the right number of black moves', ->
+      board.moves.push create_pass_move(WHITE)
       expect(get_all_plausible_moves(board).length).toEqual 5
 
     it 'finds the right number of white moves', ->
       board.moves.push create_pass_move(BLACK)
       expect(get_all_plausible_moves(board).length).toEqual 4
-
-

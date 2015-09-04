@@ -193,7 +193,7 @@ describe 'moves', ->
       beforeEach ->
         capture_board = create_one_capture_board()
         capture_move = capture_one_stone_move()
-        play_stone(capture_move, capture_board)
+        makeValidMove(capture_move, capture_board)
 
       it 'handles a simple capture and clears out the captured stone', ->
         expect(get_color(1, 1, capture_board)).toEqual EMPTY
@@ -205,7 +205,7 @@ describe 'moves', ->
       beforeEach ->
         capture_board = create_2_capture_board()
         capture_move = capture_2_stones_move()
-        play_stone(capture_move, capture_board)
+        makeValidMove(capture_move, capture_board)
 
       it 'cleans up the two captured stones', ->
         expect(get_color(1, 1, capture_board)).toEqual EMPTY
@@ -402,6 +402,3 @@ describe 'moves', ->
         diagonal_move = create_stone(1, 0, WHITE)
         set_move(diagonal_move, eye_board)
         expect(is_eye(eye_move, eye_board)).toBeFalsy()
-
-
-
