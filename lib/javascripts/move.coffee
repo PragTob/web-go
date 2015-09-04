@@ -7,10 +7,11 @@ create_pass_move = (color)-> create_stone(null, null, color)
 
 # assumes that the move is valid (doesn't bother checking)
 makeValidMove = (stone, board) ->
-  set_stone(stone, board)
-  assignGroup(stone, board)
-  captures = capture_stones_with(stone, board)
-  stone.captures = captures
+  unless is_pass_move(stone)
+    set_stone(stone, board)
+    assignGroup(stone, board)
+    captures = capture_stones_with(stone, board)
+    stone.captures = captures
   board.moves.push stone
 
 countLiberties = (stone, board)->
