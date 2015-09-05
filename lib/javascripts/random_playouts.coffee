@@ -52,6 +52,7 @@ playout_for_board = (board)->
     play_stone(move, board)
   board
 
+
 score_game = (board)->
 
   init_score =  ->
@@ -86,6 +87,3 @@ score_game = (board)->
   count_score(board, score)
   determine_winner(score)
   score
-
-
-

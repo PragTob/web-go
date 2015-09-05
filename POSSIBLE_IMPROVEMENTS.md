@@ -23,6 +23,10 @@ MCTS improvements & co.
 
 * RAVE (apply every move to the tree)
 
+## Appearance
+* one concatenated JS
+* all JS style methods
+* nice look actually
 
 
 ## Features
