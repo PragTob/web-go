@@ -13,7 +13,7 @@ create_node = (board, move, parent)->
   node
 
 create_root = (board)->
-  root = create_node(board, null, null)
+  create_node(board, null, null)
 
 select = (root)->
   selected_node = root
@@ -76,13 +76,13 @@ select_best_node = (node)->
 
   best_node
 
-mcts = (board, playouts = DEFAULT_PLAYOUTS)->
+explore_tree = (root, own_color)->
+  selected_node = select(root)
+  new_child = expand(selected_node)
+  have_won = rollout(new_child, own_color)
+  backpropagate(new_child, have_won)
 
-  explore_tree = (root, own_color)->
-    selected_node = select(root)
-    new_child = expand(selected_node)
-    have_won = rollout(new_child, own_color)
-    backpropagate(new_child, have_won)
+mcts = (board, playouts = DEFAULT_PLAYOUTS)->
 
   root = create_root(board)
   own_color = determine_move_color(board)

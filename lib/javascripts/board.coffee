@@ -14,14 +14,13 @@ initBoard = (size)->
   board.moves = []
   board
 
+deep_copy_2_dimensional_array = (array)->
+  copy = []
+  for i in [0...array.length]
+    copy.push array[i].slice(0)
+  copy
+
 copy_board = (board)->
-
-  deep_copy_2_dimensional_array = (array)->
-    copy = []
-    for i in [0...array.length]
-      copy.push array[i].slice(0)
-    copy
-
   copy = deep_copy_2_dimensional_array(board)
   copy.moves = board.moves.slice(0)
   copy
