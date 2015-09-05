@@ -22,7 +22,23 @@ mctsBenchmark = ->
        .on('complete', completeBenchmark)
        .run(async: true)
 
+workerBenchmark = ->
+
+  workerMainCode = (size)->
+    board = initBoard(size)
+    finished_board = playout_for_board(board)
+    score_game(finished_board)
+
+  suite = new Benchmark.Suite
+  console.log 'start'
+  suite.add('Worker main code on 9x9 (playout + score)', -> workerMainCode(9))
+       .add('Worker main code on 13x13 (playout + score)', -> workerMainCode(13))
+       .add('Worker main code on 19x19 (playout + score)', -> workerMainCode(19))
+       .on('cycle', logResult)
+       .on('complete', completeBenchmark)
+       .run(async: true)
 
 $ ->
   $('#playout_benchmark').click playoutBenchmark
   $('#mcts-benchmark').click mctsBenchmark
+  $('#worker-benchmark').click workerBenchmark
