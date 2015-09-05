@@ -58,6 +58,7 @@ findNode = (node_id)->
       return node
 
 giveWorkerWork = (worker)->
+  console.log mctsData.current_playouts if mctsData.current_playouts % 10 == 0
   if mctsData.current_playouts < mctsData.max_playouts
     selected_node = select(mctsData.root)
     new_child     = expand(selected_node)

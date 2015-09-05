@@ -1,5 +1,6 @@
 importScripts '../../../vendor/javascripts/underscore.js',
   '../board.js',
+  '../group.js',
   '../move.js',
   '../random_playouts.js',
   '../mcts.js'
