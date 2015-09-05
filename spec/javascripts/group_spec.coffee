@@ -12,7 +12,6 @@ describe 'groups', ->
       group = stone.group
       expect(group.libertyCount).toEqual 4
       expect(group.stones[0]).toBe stone
-      console.log group.liberties
       expect(group.liberties['1-0']).toEqual EMPTY
       expect(group.liberties['2-1']).toEqual EMPTY
       expect(group.liberties['0-1']).toEqual EMPTY
@@ -139,7 +138,6 @@ describe 'groups', ->
           makeValidMove(create_stone(3, 2, WHITE), board)
 
         it "gets the liberties of the top white grup", ->
-          console.log board_to_string(board)
           stone = get_stone(1, 1, board)
           group = stone.group
           expect(group.libertyCount).toEqual 6

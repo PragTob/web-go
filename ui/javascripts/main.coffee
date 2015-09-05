@@ -27,7 +27,6 @@ startMcts = (board)->
   mctsData.sent_result      = false
   mctsData.current_nodes    = []
   mctsData.current_node_id  = 1
-  console.log playoutWorkers
   giveWorkerWork(worker) for worker in playoutWorkers
 
 
@@ -59,9 +58,6 @@ findNode = (node_id)->
       return node
 
 giveWorkerWork = (worker)->
-  if mctsData.current_playouts % 10 == 0
-    console.log mctsData.current_playouts
-#    console.log max_playouts
   if mctsData.current_playouts < mctsData.max_playouts
     selected_node = select(mctsData.root)
     new_child     = expand(selected_node)
@@ -77,8 +73,6 @@ giveWorkerWork = (worker)->
       mctsData.sent_result = true
       play_stone(bestMove, board)
       set_move_on_ui_board(bestMove)
-
-
 
 scaleBoardTo = (number)->
   stretchRowsTo = (number)->
@@ -136,7 +130,6 @@ $ ->
   board_size = 9
   scaleBoardTo(board_size)
   board = initBoard(board_size)
-  console.log board_to_string(board)
 
   createWorkers()
 

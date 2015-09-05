@@ -35,12 +35,19 @@ other_color = (color)->
   else
     BLACK
 
-has_liberties = (stone)->
-  if stone.group
-    stone.group.libertyCount > 0
-  else
-    # check if there is a neighbouring empty field OR a neighboring group of
-    # the same color with 2+ liberties
+hasLibertiesWhenSet = (stone, board)->
+  _.any neighbouring_stones(stone.x, stone.y, board), (neighbour)->
+    (neighbour.color == EMPTY) ||
+    ((neighbour.color == stone.color) && (neighbour.group.libertyCount > 1))
+
+isCapturingStones = (stone, board)->
+  enemyColor = other_color(stone.color)
+  _.any neighbouring_stones(stone.x, stone.y, board), (neighbour)->
+    ((neighbour.color == enemyColor) && (neighbour.group.libertyCount <= 1))
+
+hasLiberties = (stone)->
+  stone.group.libertyCount > 0
+
 
 is_valid_move = (stone, board) ->
 
@@ -54,32 +61,34 @@ is_valid_move = (stone, board) ->
       get_last_move(board).color != move.color
 
   is_no_suicide_move = (move, board)->
-    has_liberties(move, board) or is_capturing_stones(move, board)
-
-  is_capturing_stones = (move, board)->
-    # we don't want to modify the original board as this is just a test
-    copied_board = copy_board(board)
-    set_move(move, copied_board)
-    neighbours = enemy_neighbours(move, copied_board)
-    not _.every neighbours, (stone)-> has_liberties(stone, copied_board)
+    hasLibertiesWhenSet(move, board) or isCapturingStones(move, board)
 
   is_no_illegal_ko_move = (move, board, captures)->
 
     isFirstOrSecondMove = (board)-> board.moves.length <= 1
 
-    captures_of_move = (move, board)->
-      copied_board = copy_board(board)
-      set_move(stone, copied_board)
-      capture_stones_with(stone, copied_board)
+    onlyCaptureOf = (move, board)->
+      enemies = enemy_neighbours(move, board)
+      capture = null
+      count = 0
+      _.each enemies, (enemy)->
+        if ((enemy.group.libertyCount <= 1) && (enemy.group.stones.length == 1))
+          capture = enemy
+          count += 1
+
+      if capture && (count == 1)
+        capture
+      else
+        false
 
 
     return true if isFirstOrSecondMove(board)
     last_move = get_last_move(board)
     return true if last_move.captures.length != 1
-    captures = captures_of_move(stone, board)
-    return true if captures.length != 1
+    capture = onlyCaptureOf(stone, board)
+    return true unless capture
     not (is_same_move(last_move.captures[0], move) and
-      is_same_move(captures[0], last_move))
+      is_same_move(capture, last_move))
 
 
   is_no_double_move(stone, board) and
@@ -102,7 +111,6 @@ capture_stones_with = (stone, board)->
       group = stone.group
       captures = removeGroup(group, board)
       giveBackLiberties(group)
-      captures.push stone
     captures
 
   giveBackLiberties = (group)->
@@ -125,7 +133,7 @@ capture_stones_with = (stone, board)->
   captures = []
   unless is_pass_move(stone)
     _.each enemy_neighbours(stone, board), (stone)->
-      unless has_liberties(stone)
+      unless hasLiberties(stone)
         captures = captures.concat take_captures(stone, board, enemy_color)
   captures
 

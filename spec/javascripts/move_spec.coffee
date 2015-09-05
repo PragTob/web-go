@@ -144,48 +144,49 @@ describe 'moves', ->
       it 'is not  valid move as it is a suicide', ->
         expect(is_valid_move(suicide_board_move(), suicide_board())).toBeFalsy()
 
-  describe 'has_liberties', ->
-    it 'is true for a single lonely stone', ->
-      board = initBoard(3)
-      stone = create_stone(1, 1, BLACK)
-      set_move(stone, board)
-      expect(has_liberties(stone, board)).toBeTruthy()
+  describe 'liberties', ->
 
-    it 'is true on the edge of the board', ->
-      board = initBoard(3)
-      stone = create_stone(0, 0, BLACK)
-      set_move(stone, board)
-      expect(has_liberties(stone, board)).toBeTruthy()
+    describe 'hasLibertiesWhenSet for when the move is not set yet', ->
+      it 'is true for a single lonely stone', ->
+        board = initBoard(3)
+        stone = create_stone(1, 1, BLACK)
+        expect(hasLibertiesWhenSet(stone, board)).toBeTruthy()
 
-    it 'is true even with just one liberty', ->
-      board = create_one_capture_board()
-      stone = get_stone(1, 1, board)
-      expect(has_liberties(stone, board)).toBeTruthy()
+      it 'is true on the edge of the board', ->
+        board = initBoard(3)
+        stone = create_stone(0, 0, BLACK)
+        expect(hasLibertiesWhenSet(stone, board)).toBeTruthy()
 
-    it 'is true even if just one stone of the group has the liberty', ->
-      board = create_2_capture_board()
-      stone = get_stone(1, 1, board)
-      expect(has_liberties(stone, board)).toBeTruthy()
+      it 'is true even with just one liberty', ->
+        board = create_one_capture_board()
+        stone = get_stone(1, 1, board)
+        expect(hasLibertiesWhenSet(stone, board)).toBeTruthy()
 
-    it 'is falsy for a surrounded corner stone', ->
-      board = initBoard(3)
-      stone = create_stone(0, 0, BLACK)
-      set_move(stone, board)
-      set_move(create_stone(0, 1, WHITE), board)
-      set_move(create_stone(1, 0, WHITE), board)
-      expect(has_liberties(stone, board)).toBeFalsy()
+      it 'is falsy for a classic star catch', ->
+        board = create_one_capture_board()
+        set_move(create_stone(2, 1, BLACK), board)
+        stone = get_stone(1, 1, board)
+        expect(hasLibertiesWhenSet(stone, board)).toBeFalsy()
 
-    it 'is falsy for a classic star catch', ->
-      board = create_one_capture_board()
-      set_move(create_stone(2, 1, BLACK), board)
-      stone = get_stone(1, 1, board)
-      expect(has_liberties(stone, board)).toBeFalsy()
+      it 'is falsy for a turtle capture', ->
+        board = create_2_capture_board()
+        stone = get_stone(1, 1, board)
+        set_move(create_stone(3, 1, BLACK), board)
+        expect(hasLibertiesWhenSet(stone, board)).toBeFalsy()
 
-    it 'is falsy for a turtle capture', ->
-      board = create_2_capture_board()
-      stone = get_stone(1, 1, board)
-      set_move(create_stone(3, 1, BLACK), board)
-      expect(has_liberties(stone, board)).toBeFalsy()
+    describe 'hasLiberties, for when the stone is already set', ->
+      it 'is true even if just one stone of the group has the liberty', ->
+        board = create_2_capture_board()
+        stone = get_stone(1, 1, board)
+        expect(hasLiberties(stone)).toBeTruthy()
+
+      it 'is falsy for a surrounded corner stone', ->
+        board = initBoard(3)
+        stone = create_stone(0, 0, BLACK)
+        makeValidMove(stone, board)
+        makeValidMove(create_stone(0, 1, WHITE), board)
+        makeValidMove(create_stone(1, 0, WHITE), board)
+        expect(hasLiberties(stone)).toBeFalsy()
 
   describe 'capturing stones', ->
     capture_move = null
@@ -219,35 +220,39 @@ describe 'moves', ->
     capture_board = null
     capture_move = null
 
+    lastCaptures = (capture_board)->
+      moves = capture_board.moves
+      moves[moves.length - 1].captures
+
     describe 'one capture', ->
       beforeEach ->
         capture_board = create_one_capture_board()
         capture_move = capture_one_stone_move()
-        set_move(capture_move, capture_board)
+        makeValidMove(capture_move, capture_board)
 
       it 'returns an array with a single captured stone', ->
-        captures = capture_stones_with(capture_move, capture_board)
-        expect(captures.length).toEqual 1
+        expect(lastCaptures(capture_board).length).toEqual 1
 
       it 'captures the right stone', ->
         stone_to_be_captured = get_stone(1, 1, capture_board)
-        captures = capture_stones_with(capture_move, capture_board)
-        expect(captures).toEqual [stone_to_be_captured]
+        captures = lastCaptures(capture_board)
+        expect(is_same_move(captures[0], create_stone(1, 1, WHITE))).toBeTruthy()
 
     describe '2 captures', ->
       beforeEach ->
         capture_board = create_2_capture_board()
         capture_move = capture_2_stones_move()
-        set_move(capture_move, capture_board)
 
       it 'returns an array with a single captured stone', ->
-        captures = capture_stones_with(capture_move, capture_board)
+        makeValidMove(capture_move, capture_board)
+        captures = lastCaptures(capture_board)
         expect(captures.length).toEqual 2
 
       it 'captures the right stones', ->
         first_to_be_captured = get_stone(1, 1, capture_board)
         second_to_be_captured = get_stone(2, 1, capture_board)
-        captures = capture_stones_with(capture_move, capture_board)
+        makeValidMove(capture_move, capture_board)
+        captures = lastCaptures(capture_board)
         expect(captures).toContain first_to_be_captured
         expect(captures).toContain second_to_be_captured
 
@@ -269,16 +274,17 @@ describe 'moves', ->
       beforeEach ->
         capture_board = create_capture_2_groups_board()
         capture_move = capture_2_groups_move()
-        set_move(capture_move, capture_board)
 
       it 'captures 2 stones', ->
-        captures = capture_stones_with(capture_move, capture_board)
+        makeValidMove(capture_move, capture_board)
+        captures = lastCaptures(capture_board)
         expect(captures.length).toEqual 2
 
       it 'captures the right 2 tones', ->
         first_to_be_captured = get_stone(1, 1, capture_board)
         second_to_be_captured = get_stone(3, 1, capture_board)
-        captures = capture_stones_with(capture_move, capture_board)
+        makeValidMove(capture_move, capture_board)
+        captures = lastCaptures(capture_board)
         expect(captures).toContain first_to_be_captured
         expect(captures).toContain second_to_be_captured
 
@@ -310,7 +316,6 @@ describe 'moves', ->
     first_ko_capture = (board)->
       play_stone(create_stone(1, 1, WHITE), board)
       board
-
 
     it 'can play the first ko move and capture the stone',->
       ko_board = first_ko_capture(ko_board)
