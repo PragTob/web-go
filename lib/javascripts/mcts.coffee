@@ -1,5 +1,7 @@
 UCT_BIAS_FACTOR = 2
 DEFAULT_PLAYOUTS = 1000
+NUM_WORKERS = 4
+playoutWorkers = []
 
 create_node = (board, move, parent)->
   node =
@@ -83,7 +85,6 @@ explore_tree = (root, own_color)->
   backpropagate(new_child, have_won)
 
 mcts = (board, playouts = DEFAULT_PLAYOUTS)->
-
   root = create_root(board)
   own_color = determine_move_color(board)
 
@@ -92,3 +93,53 @@ mcts = (board, playouts = DEFAULT_PLAYOUTS)->
 
   best_node = select_best_node root
   best_node.move
+
+createWorkers = (n, mctsData)->
+  answerMethod = (message)-> handleWorkerAnswer(message, mctsData)
+  for i in [1..n]
+    worker = new Worker 'lib/javascripts/worker/playout_worker.js'
+    worker.addEventListener('message', answerMethod)
+    worker.addEventListener('error', (message)->
+      console.log 'Worker error message:' + message.data)
+    playoutWorkers.push worker
+
+handleWorkerAnswer = (message, mctsData)->
+  answer_node_id   = message.data.node_id
+  has_won          = message.data.has_won
+  giveWorkerWork(message.target, mctsData)
+  real_node        = findNode(answer_node_id)
+  backpropagate(real_node, has_won)
+  mctsData.current_playouts++
+
+giveWorkerWork = (worker, mctsData)->
+  console.log mctsData.current_playouts if mctsData.current_playouts % 10 == 0
+  if mctsData.current_playouts < mctsData.max_playouts
+    selected_node = select(mctsData.root)
+    new_child     = expand(selected_node)
+    new_child.id  = mctsData.current_node_id
+    mctsData.current_node_id++
+    mctsData.current_nodes.push new_child
+    worker.postMessage {node: new_child, own_color: mctsData.own_color}
+  else
+    unless mctsData.sent_result
+      console.log 'sent result'
+      best_node = select_best_node mctsData.root
+      bestMove  = best_node.move
+      mctsData.sent_result = true
+      play_stone(bestMove, board)
+      set_move_on_ui_board(bestMove)
+
+webWorkerMcts = (board, moveCallback, playouts = DEFAULT_PLAYOUTS)->
+  mctsData =
+    board:            board
+    current_nodes:    []
+    current_playouts: 0
+    own_color:        determine_move_color(board)
+    root:             create_root(board)
+    sentResult:       false
+    max_playouts:     MAX_PLAYOUTS
+    current_node_id:  1
+  mctsData.root.id    = 0
+
+  createWorkers(NUM_WORKERS, mctsData) if playoutWorkers.length == 0
+  giveWorkerWork(worker, mctsData) for worker in playoutWorkers

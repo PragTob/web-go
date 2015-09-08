@@ -3,40 +3,8 @@ COLOR_TO_CLASS = {}
 COLOR_TO_CLASS[BLACK] = 'black'
 COLOR_TO_CLASS[WHITE] = 'white'
 MAX_PLAYOUTS = 1000
-NUM_WORKERS = 4
 
 board = null
-
-mctsData =
-  current_node_id:  null
-  current_nodes:    []
-  current_playouts: null
-  own_color:        null
-  root:             null
-  sentResult:       false
-  max_playouts:     MAX_PLAYOUTS
-
-playoutWorkers = []
-
-startMcts = (board)->
-  mctsData.root             = create_root(board)
-  mctsData.root.id          = 0
-  mctsData.own_color        = determine_move_color(board)
-  mctsData.current_playouts = 0
-  mctsData.board            = board
-  mctsData.sent_result      = false
-  mctsData.current_nodes    = []
-  mctsData.current_node_id  = 1
-  giveWorkerWork(worker) for worker in playoutWorkers
-
-
-createWorkers = ->
-  for i in [1..NUM_WORKERS]
-    worker = new Worker 'lib/javascripts/worker/playout_worker.js'
-    worker.addEventListener('message', handleWorkerAnswer)
-    worker.addEventListener('error', (message)->
-      console.log 'Worker error message:' + message.data)
-    playoutWorkers.push worker
 
 handleWorkerAnswer = (message)->
   answer_node_id   = message.data.node_id
