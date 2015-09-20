@@ -2,6 +2,9 @@
 
 Possible improvements that could be applied to the bot.
 
+## Critical/Bugs
+* Investigate the group join logic if a stone that joins two groups correctly lets all members of that group join the other group
+
 ## More efficient playouts
 More efficient playouts means more playouts, means more data, means better moves being chosen hopefully.
 A lot of these are hypothetical and running the benchmark will show if they are really worth it.

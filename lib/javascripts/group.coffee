@@ -15,6 +15,8 @@ removeLibertyOfNewMember = (group, stone)->
   delete groupLibertyAt(group, stone.x, stone.y)
   group.libertyCount -= 1
 
+# TODO: if a stone joined two groups this likely produces wrong results
+# as the stones of the other group don't join as well
 joinGroup = (group, stone)->
   addStoneToGroup(group, stone)
   removeLibertyOfNewMember(group, stone)
