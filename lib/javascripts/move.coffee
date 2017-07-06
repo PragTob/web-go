@@ -35,13 +35,13 @@ other_color = (color)->
     BLACK
 
 hasLibertiesWhenSet = (stone, board)->
-  _.any neighbouring_stones(stone.x, stone.y, board), (neighbour)->
+  _.some neighbouring_stones(stone.x, stone.y, board), (neighbour)->
     (neighbour.color == EMPTY) ||
     ((neighbour.color == stone.color) && (neighbour.group.libertyCount > 1))
 
 isCapturingStones = (stone, board)->
   enemyColor = other_color(stone.color)
-  _.any neighbouring_stones(stone.x, stone.y, board), (neighbour)->
+  _.some neighbouring_stones(stone.x, stone.y, board), (neighbour)->
     ((neighbour.color == enemyColor) && (neighbour.group.libertyCount <= 1))
 
 hasLiberties = (stone)->
@@ -135,7 +135,7 @@ capture_stones_with = (stone, board)->
 
 is_eye_shape = (move, board)->
   neighbours = neighbouring_stones(move.x, move.y, board)
-  _.all neighbours, (neighbour)->
+  _.every neighbours, (neighbour)->
     neighbour.color == move.color or neighbour.color == NEUTRAL
 
 diagonal_stone_colors = (move, board)->
@@ -151,7 +151,7 @@ is_edge_move = (move, board)->
 get_enemy_diagonals_count = (move, board)->
   diagonal_stones = diagonal_stone_colors(move, board)
   opponent_color = other_color(move.color)
-  _.select(diagonal_stones, (color)-> color == opponent_color).length
+  _.filter(diagonal_stones, (color)-> color == opponent_color).length
 
 is_real_eye = (move, board)->
   enemy_diagonals_count = get_enemy_diagonals_count(move, board)

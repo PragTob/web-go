@@ -65,11 +65,11 @@ count_score = (board, score)->
       determine_score_for_empty(x, y, board, score)
 
 determine_score_for_empty = (x, y, board, score)->
-  colored_neighbours = _.select(neighbouring_stones(x, y, board), (stone)->
+  colored_neighbours = _.filter(neighbouring_stones(x, y, board), (stone)->
     stone.color == BLACK or stone.color == WHITE)
   if colored_neighbours.length >= 1
     neighbour_color = colored_neighbours[0].color
-    all_same_color = _.all(colored_neighbours, (neighbour)->
+    all_same_color = _.every(colored_neighbours, (neighbour)->
       neighbour.color == neighbour_color)
     score[neighbour_color] += 1 if all_same_color
 

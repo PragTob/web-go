@@ -60,7 +60,7 @@ neighbouring_stones = (x, y, board)->
 enemy_neighbours = (my_stone, board)->
   neighbours = neighbouring_stones(my_stone.x, my_stone.y, board)
   enemy_color = other_color(my_stone.color)
-  _.select neighbours, (neighbouring_stone)->
+  _.filter neighbours, (neighbouring_stone)->
     neighbouring_stone.color == enemy_color
 
 get_last_move = (board)->

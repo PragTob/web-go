@@ -80,13 +80,13 @@ describe 'get_all_plausible_moves', ->
 
   it 'generates black moves for an empty board', ->
     board = initBoard(3)
-    all_black = _.all get_all_plausible_moves(board), (move)-> move.color == BLACK
+    all_black = _.every get_all_plausible_moves(board), (move)-> move.color == BLACK
     expect(all_black).toBeTruthy()
 
   it 'generates all white moves if a black move has been played before', ->
     board = initBoard(3)
     play_stone(create_stone(1, 1, BLACK), board)
-    all_white = _.all get_all_plausible_moves(board), (move)-> move.color == WHITE
+    all_white = _.every get_all_plausible_moves(board), (move)-> move.color == WHITE
     expect(all_white).toBeTruthy()
 
   it 'does not find any moves for a finished game', ->
